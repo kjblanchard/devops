@@ -15,7 +15,7 @@ spec:
         app: flask-webapp
     spec:
       containers:
-      - name: flask-webapp
-        image: enf3rno/sg_flask
-        ports:
-        - containerPort: 80
+        - name: flask-webapp
+          image: enf3rno/sg_flask
+          ports:
+            - containerPort: 80

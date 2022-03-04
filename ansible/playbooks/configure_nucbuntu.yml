@@ -1,0 +1,51 @@
+---
+#Inventory file is in /ect/ansible/hosts
+#run command ansible-playbook configure_nucbuntu.yml -K
+#need to add variables to only do this if which command fails
+#need to add in iptables based on command, maybe another playbook.
+- name: Install all dependencies
+  hosts: nucbuntu
+  user: kevin
+  tasks:
+
+  # Install Kubectl
+    - name: Install Kubectl Dependencies
+      become: true
+      apt:
+        pkg:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+    - name: Add Kubectl Repo Key
+      become: true
+      apt_key:
+        keyring: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    - name: Add kubectl Apt Repo
+      become: true
+      apt_repository:
+        repo: 'deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main'
+        filename: kubernetes
+    - name: Install kubectl
+      become: true
+      apt:
+        name: kubectl
+
+  # Install helm
+    - name: Add Helm Apt Repo
+      become: true
+      apt_repository:
+        repo: 'deb https://baltocdn.com/helm/stable/debian/ all main'
+        filename: helm-stable-debian
+    - name: Add Helm Repo Key - needed for helm installation
+      become: true
+      apt_key:
+        url: https://baltocdn.com/helm/signing.asc
+    - name: Install Helm Dependencies
+      become: true
+      apt:
+        name: apt-transport-https
+    - name: Install Helm
+      become: true
+      apt:
+        name: helm
