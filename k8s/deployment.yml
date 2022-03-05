@@ -66,10 +66,10 @@ spec:
 
       volumes:
         - name: cert-volume
-          persistantVolumeClaim:
+          persistentVolumeClaim:
             claimName: cert-volume-claim
         - name: acme-volume
-          persistantVolumeClaim:
+          persistentVolumeClaim:
             claimName: acme-volume-claim
 ---
 apiVersion: v1
@@ -93,7 +93,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storate: 3Mi
+      storage: 3Mi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -104,4 +104,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storate: 2Mi
+      storage: 2Mi
