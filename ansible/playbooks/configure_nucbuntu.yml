@@ -50,6 +50,7 @@
       apt:
         name: helm
     # Ensure folders are created for the kubernetes bindmounts for cert storage
+    # This is not needed, as minikube is actually the thing that will need the info
     - name: Create folder for lets encrypt
       become: true
       file:

@@ -62,9 +62,9 @@ spec:
       volumes:
         - name: cert-volume
           hostpath:
-            path: /etc/letsencrypt
+            path: /data/pv0001/
             type: Directory
         - name: acme-volume
           hostpath:
-            path: /var/www/challenge/.well-known/acme-challenge
+            path: /data/pv0002/
             type: Directory
