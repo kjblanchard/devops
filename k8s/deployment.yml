@@ -41,30 +41,67 @@ spec:
           image: enf3rno/sg_nginx
           volumeMounts:
             - mountPath: /etc/letsencrypt
-              name: cert-volume
+              name: cert-volume-claim
             - mountPath: /var/www/challenge/.well-known/acme-challenge
-              name: acme-volume
+              name: acme-volume-claim
           ports:
             - containerPort: 5050
       initContainers:
         - name: init-ssl-cert
           image: certbot/certbot
           env:
-          - name: KEYS_FOLDER
-            value: /etc/certbot/conf/live/wedding.supergoon.com
+            - name: KEYS_FOLDER
+              value: /etc/certbot/conf/live/wedding.supergoon.com
           volumeMounts:
             - mountPath: /etc/letsencrypt
-              name: cert-volume
+              name: cert-volume-claim
             - mountPath: /var/www/challenge/.well-known/acme-challenge
-              name: acme-volume
-          command: ['sh', '-c',"openssl req -batch -newkey rsa:1024 -new -nodes -x509 -days 2 -keyout $KEYS_FOLDER/privkey.pem -out $KEYS_FOLDER/fullchain.pem && certbot certonly --webroot -w /var/www/challenge -d www.wedding.supergoon.com -d wedding.supergoon.com -m blanchardkevinj@gmail.com --agree-tos"]
+              name: acme-volume-claim
+          cmd:
+            [
+              "sh",
+              "-c",
+              "openssl req -batch -newkey rsa:1024 -new -nodes -x509 -days 2 -keyout $KEYS_FOLDER/privkey.pem -out $KEYS_FOLDER/fullchain.pem && certbot certonly --webroot -w /var/www/challenge -d www.wedding.supergoon.com -d wedding.supergoon.com -m blanchardkevinj@gmail.com --agree-tos",
+            ]
 
       volumes:
         - name: cert-volume
-          hostPath:
-            path: /data/pv0001/
-            type: Directory
+          persistantVolumeClaim:
+            claimName: cert-volume-claim
         - name: acme-volume
-          hostPath:
-            path: /data/pv0002/
-            type: Directory
+          persistantVolumeClaim:
+            claimName: acme-volume-claim
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv0001
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 5Mi
+  hostPath:
+    path: /data/pv0001/
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cert-volume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storate: 3Mi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: acme-volume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storate: 2Mi
