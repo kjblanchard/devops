@@ -59,7 +59,10 @@ spec:
             - mountPath: /var/www/challenge/.well-known/acme-challenge
               name: acme-volume
           ports:
-            - containerPort: 80
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
 
       volumes:
         - name: cert-volume

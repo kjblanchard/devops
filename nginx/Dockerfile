@@ -16,15 +16,18 @@ COPY ./default.conf /etc/nginx/conf.d/default.conf.webserver
 #Make the keys folder where we will hold some things for when we need to generate the cert.
 ENV KEYS_FOLDER=/etc/certbot/conf/live/wedding.supergoon.com
 RUN mkdir -p $KEYS_FOLDER
+
 #This should be a bind mount, as it holds the actual certificate.
 ENV CERT_FOLDER=/etc/letsencrypt/live/wedding.supergoon.com/
+RUN mkdir -p $CERT_FOLDER
 
 #Put our file into the daily cron to keep the cert updated
 COPY ./update_cert_cron.sh /etc/periodic/daily/update_cert_cron.sh
 #TODO update the DNS record in this daily cron as well, will need AWS creds and AWS CLI in a script
 
+COPY ./get_ssl_keys.sh start.sh
+RUN chmod +x start.sh
+ENTRYPOINT ["tail", "-f", "/dev/null"]
 
-ENTRYPOINT ["echo"]
-CMD ["hello world"]
 
 
