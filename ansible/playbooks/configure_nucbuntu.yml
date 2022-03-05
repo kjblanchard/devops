@@ -53,7 +53,7 @@
     - name: Create folder for lets encrypt
       become: true
       file:
-        path: {{ item }}
+        path: "{{ item }}"
         state: directory
       with_items:
        - '/etc/letsencrypt'
