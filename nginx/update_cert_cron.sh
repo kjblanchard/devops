@@ -1,3 +1,4 @@
+#!/bin/sh
 nginx -s stop
 cp /etc/nginx/conf.d/default.conf.certbot /etc/nginx/conf.d/default.conf
 nginx
