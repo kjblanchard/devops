@@ -26,7 +26,8 @@ RUN chmod +x $CRON_FOLDER
 COPY ./get_ssl_keys.sh start.sh
 RUN chmod +x start.sh
 
-ENTRYPOINT ["start.sh"]
+RUN ./start.sh
+
 
 
 

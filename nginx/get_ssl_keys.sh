@@ -5,16 +5,15 @@ generate_cert(){
     cp /etc/nginx/conf.d/default.conf.certbot /etc/nginx/conf.d/default.conf
     nginx
     certbot --nginx -d wedding.supergoon.com -d www.wedding.supergoon.com
+    nginx -s stop
 }
 
-start_server(){
-    nginx -s stop
+configure_prod_server(){
     cp /etc/nginx/conf.d/default.conf.webserver /etc/nginx/conf.d/default.conf
-    nginx
 }
 if [ -e $CERT_FOLDER/fullchain.pem ]; then
-    start_server
+    configure_prod_server
  else
     generate_cert
-    start_server
+    configure_prod_server
 fi
