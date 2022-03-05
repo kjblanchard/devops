@@ -17,6 +17,13 @@ spec:
       containers:
         - name: flask-webapp
           image: enf3rno/sg_flask
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
           ports:
             - containerPort: 80
 ---
@@ -39,69 +46,25 @@ spec:
       containers:
         - name: nginx-webapp
           image: enf3rno/sg_nginx
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
           volumeMounts:
             - mountPath: /etc/letsencrypt
-              name: cert-volume-claim
+              name: cert-volume
             - mountPath: /var/www/challenge/.well-known/acme-challenge
-              name: acme-volume-claim
+              name: acme-volume
           ports:
-            - containerPort: 5050
-      initContainers:
-        - name: init-ssl-cert
-          image: certbot/certbot
-          env:
-            - name: KEYS_FOLDER
-              value: /etc/certbot/conf/live/wedding.supergoon.com
-          volumeMounts:
-            - mountPath: /etc/letsencrypt
-              name: cert-volume-claim
-            - mountPath: /var/www/challenge/.well-known/acme-challenge
-              name: acme-volume-claim
-          command:
-            [
-              "sh",
-              "-c",
-              "openssl req -batch -newkey rsa:1024 -new -nodes -x509 -days 2 -keyout $KEYS_FOLDER/privkey.pem -out $KEYS_FOLDER/fullchain.pem && certbot certonly --webroot -w /var/www/challenge -d www.wedding.supergoon.com -d wedding.supergoon.com -m blanchardkevinj@gmail.com --agree-tos",
-            ]
+            - containerPort: 80
 
       volumes:
         - name: cert-volume
-          persistentVolumeClaim:
-            claimName: cert-volume-claim
+          hostPath:
+            path: cert-volume-claim
         - name: acme-volume
-          persistentVolumeClaim:
-            claimName: acme-volume-claim
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: pv0001
-spec:
-  accessModes:
-    - ReadWriteOnce
-  capacity:
-    storage: 5Mi
-  hostPath:
-    path: /data/pv0001/
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: cert-volume-claim
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 3Mi
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: acme-volume-claim
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 2Mi
+          hostPath:
+            path: acme-volume-claim
