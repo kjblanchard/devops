@@ -6,10 +6,9 @@ if [ "$#" == "1" ]; then
 	response=`minikube service $service_name --url`
 	get_url_add_to_iptables $response
 else
-	while (( "$#" )); do        # While there are arguments still to be shifted
+while (( "$#" )); do        # While there are arguments still to be shifted
 	get_url_add_to_iptables $1
 	shift
-	done
 done
 fi
 
