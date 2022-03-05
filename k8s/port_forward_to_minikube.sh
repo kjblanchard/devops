@@ -8,9 +8,8 @@ if [ "$#" == "1" ]; then
 else
 	while (( "$#" )); do        # While there are arguments still to be shifted
 	get_url_add_to_iptables $1
-
-	done
 	shift
+	done
 done
 fi
 
