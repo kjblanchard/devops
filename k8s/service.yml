@@ -7,8 +7,7 @@ spec:
   selector:
     app: flask-webapp
   ports:
-    - port: 8080
-      targetPort: 80
+    - port: 80
       nodePort: 30007
 
 ---
@@ -21,6 +20,5 @@ spec:
   selector:
     app: nginx-webapp
   ports:
-    - port: 8080
-      targetPort: 80
+    - port: 5050
       nodePort: 30008
