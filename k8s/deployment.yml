@@ -51,7 +51,7 @@ spec:
           image: certbot/certbot
           env:
           - name: KEYS_FOLDER
-            value: /etc/certbot/conf/live/www.wedding.supergoon.com
+            value: /etc/certbot/conf/live/wedding.supergoon.com
           volumeMounts:
             - mountPath: /etc/letsencrypt
               name: cert-volume

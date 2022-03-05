@@ -13,12 +13,13 @@ RUN apk add openssl curl ca-certificates && \
 COPY ./default.conf /etc/nginx/conf.d/default.conf
 
 #Generate a temporary certificate so that we can generate one with certbot
-ARG KEYS_FOLDER=/etc/certbot/conf/live/www.wedding.supergoon.com
+ARG KEYS_FOLDER=/etc/certbot/conf/live/wedding.supergoon.com
 RUN mkdir -p $KEYS_FOLDER
 RUN nginx
 #Override the certbot entrypoint and cmd so that we can use it as init container
 ENTRYPOINT ["echo"]
 CMD ["hello world"]
+
 # RUN openssl req -batch -newkey rsa:1024 -new -nodes -x509 -days 2 -keyout $KEYS_FOLDER/privkey.pem -out $KEYS_FOLDER/fullchain.pem
 # RUN certbot certonly --webroot -w /var/www/challenge -d www.wedding.supergoon.com -d wedding.supergoon.com -m blanchardkevinj@gmail.com --agree-tos
 
