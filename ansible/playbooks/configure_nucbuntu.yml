@@ -1,8 +1,7 @@
 ---
-#Inventory file is in /ect/ansible/hosts
+#Inventory file is in /etc/ansible/hosts
 #run command ansible-playbook configure_nucbuntu.yml -K
 #need to add variables to only do this if which command fails
-#need to add in iptables based on command, maybe another playbook.
 - name: Install all dependencies
   hosts: nucbuntu
   user: kevin
@@ -50,7 +49,6 @@
       apt:
         name: helm
     # Ensure folders are created for the kubernetes bindmounts for cert storage
-    # This is not needed, as minikube is actually the thing that will need the info
     - name: Create folder for lets encrypt
       become: true
       file:
