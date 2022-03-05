@@ -57,14 +57,14 @@ spec:
               name: cert-volume
             - mountPath: /var/www/challenge/.well-known/acme-challenge
               name: acme-volume
-          cmd: ['sh', '-c',"openssl req -batch -newkey rsa:1024 -new -nodes -x509 -days 2 -keyout $KEYS_FOLDER/privkey.pem -out $KEYS_FOLDER/fullchain.pem && certbot certonly --webroot -w /var/www/challenge -d www.wedding.supergoon.com -d wedding.supergoon.com -m blanchardkevinj@gmail.com --agree-tos"]
+          command: ['sh', '-c',"openssl req -batch -newkey rsa:1024 -new -nodes -x509 -days 2 -keyout $KEYS_FOLDER/privkey.pem -out $KEYS_FOLDER/fullchain.pem && certbot certonly --webroot -w /var/www/challenge -d www.wedding.supergoon.com -d wedding.supergoon.com -m blanchardkevinj@gmail.com --agree-tos"]
 
       volumes:
         - name: cert-volume
-          hostpath:
+          hostPath:
             path: /data/pv0001/
             type: Directory
         - name: acme-volume
-          hostpath:
+          hostPath:
             path: /data/pv0002/
             type: Directory
