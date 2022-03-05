@@ -64,7 +64,7 @@ spec:
       volumes:
         - name: cert-volume
           hostPath:
-            path: cert-volume-claim
+            path: /kube_host/letsencrypt
         - name: acme-volume
           hostPath:
-            path: acme-volume-claim
+            path: /kube_host/challenge
