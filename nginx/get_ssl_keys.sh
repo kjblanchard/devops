@@ -1,11 +1,20 @@
 #!/bin/sh
-#This is used to request a new certificate from letsencrypt.  The first command allows us to start out webserver properly with the second command, only run if there is no certs.
-if [ "$(ls -A $CERT_FOLDER)" ]; then
+#Generate a cert if you need one, otherwise start the server.
+generate_cert(){
+    nginx -s stop
     cp /etc/nginx/conf.d/default.conf.certbot /etc/nginx/conf.d/default.conf
-    openssl req -batch -newkey rsa:1024 -new -nodes -x509 -days 2 -keyout $KEYS_FOLDER/privkey.pem -out $KEYS_FOLDER/fullchain.pem
-    certbot certonly --webroot -w /var/www/challenge -d www.wedding.supergoon.com -d wedding.supergoon.com -m blanchardkevinj@gmail.com --agree-tos
+    nginx
+    certbot --nginx -d wedding.supergoon.com -d www.wedding.supergoon.com
+}
+
+start_server(){
+    nginx -s stop
+    cp /etc/nginx/conf.d/default.conf.webserver /etc/nginx/conf.d/default.conf
+    nginx
+}
+if [ -e $CERT_FOLDER/fullchain.pem ]; then
+    start_server
+ else
+    generate_cert
+    start_server
 fi
-# After you get the cert (if needed), use the real nginx conf to serve the website
-nginx stop
-cp /etc/nginx/conf.d/default.conf.webserver /etc/nginx/conf.d/default.conf
-nginx
