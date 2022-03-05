@@ -49,3 +49,12 @@
       become: true
       apt:
         name: helm
+    # Ensure folders are created for the kubernetes bindmounts for cert storage
+    - name: Create folder for lets encrypt
+      become: true
+      file:
+        path: {{ item }}
+        state: directory
+      with_items:
+       - '/etc/letsencrypt'
+       - '/var/www/challenge/.well-known/acme-challenge enf3rno/sg_certbot'

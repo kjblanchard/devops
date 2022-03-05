@@ -39,6 +39,32 @@ spec:
       containers:
         - name: nginx-webapp
           image: enf3rno/sg_nginx
+          volumeMounts:
+            - mountPath: /etc/letsencrypt
+              name: cert-volume
+            - mountPath: /var/www/challenge/.well-known/acme-challenge
+              name: acme-volume
           ports:
             - containerPort: 5050
+      initContainers:
+        - name: init-ssl-cert
+          image: certbot/certbot
+          env:
+          - name: KEYS_FOLDER
+            value: /etc/certbot/conf/live/www.wedding.supergoon.com
+          volumeMounts:
+            - mountPath: /etc/letsencrypt
+              name: cert-volume
+            - mountPath: /var/www/challenge/.well-known/acme-challenge
+              name: acme-volume
+              cmd: ['sh', '-c',"openssl req -batch -newkey rsa:1024 -new -nodes -x509 -days 2 -keyout $KEYS_FOLDER/privkey.pem -out $KEYS_FOLDER/fullchain.pem && certbot certonly --webroot -w /var/www/challenge -d www.wedding.supergoon.com -d wedding.supergoon.com -m blanchardkevinj@gmail.com --agree-tos"]
 
+      volumes:
+        - name: cert-volume
+          hostpath:
+            path: /etc/letsencrypt
+            type: Directory
+        - name: acme-volume
+          hostpath:
+            path: /var/www/challenge/.well-known/acme-challenge
+            type: Directory
