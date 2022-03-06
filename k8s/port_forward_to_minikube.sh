@@ -1,5 +1,5 @@
 #!/bin/bash
-#Need to add a removal shell script as well
+# This is not used anymore, it has been converted into ansible.
 get_url_add_to_iptables(){
 	without_http=`echo $1 | sed "s/http:\/\///"`
 	ip=`echo $without_http | cut -d ':' -f1`
