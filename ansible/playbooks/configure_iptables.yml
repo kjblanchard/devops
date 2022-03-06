@@ -1,1 +1,49 @@
 # Add in the iptables entries if they need to be made.
+#Make this more dnamic (take in vars)
+- name: Setup Port Forwarding Rules
+  hosts: nucbuntu
+  user: kevin
+  vars:
+    minikube_ip_address: 192.168.49.2
+    minikube_http_port: 30007
+    minikube_ssl_port: 30008
+    interface_name: wlp0s20f3
+  tasks:
+  - name: Accept Port 80 Inbound into IpTables
+    ansible.builtin.iptables:
+    chain: FORWARD
+    match: tcp
+    jump: ACCEPT
+    destination: "{{ minikube_ip_address }}"
+    destination_port: 80
+  - name: Accept Port 443 Inbound into IpTables
+    ansible.builtin.iptables:
+    chain: FORWARD
+    match: tcp
+    jump: ACCEPT
+    destination: "{{ minikube_ip_address }}"
+    destination_port: 443
+  - name: Forward Incoming traffic from port 80 On Nucbuntu to minikube
+    ansible.builtin.iptables:
+      table: nat
+      chain: PREROUTING
+      in_interface: "{{ interface_name }}"
+      protocol: tcp
+      match: tcp
+      destination_port: 80
+      jump: DNAT
+      to_destination: "{{ minikube_ip_address }}"
+      to_ports: "{{ minikube_http_port }}"
+    become: yes
+  - name: Forward Incoming traffic from port 443 On Nucbuntu to minikube
+    ansible.builtin.iptables:
+      table: nat
+      chain: PREROUTING
+      in_interface: "{{ wlp0s20f3 }}"
+      protocol: tcp
+      match: tcp
+      destination_port: 443
+      jump: DNAT
+      to_destination: "{{ minikube_ip_address }}"
+      to_ports: "{{ minikube_ssl_port }}"
+    become: yes
