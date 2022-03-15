@@ -5,7 +5,10 @@ app = Flask(__name__)
 
 @app.route("/")
 def homepage():
-    return render_template('index.html', days=get_days_until_wedding())
+    return render_template('index.html',
+     days=get_days_until_wedding(),
+     footer=get_footer_text()
+     )
 
 def get_days_until_wedding():
     time = datetime.now()
@@ -13,5 +16,10 @@ def get_days_until_wedding():
     diff = wedding_day - time
     return diff.days
 
+def get_footer_text():
+    time = datetime.now()
+    year = time.year
+    return f'Copyright Kevin Blanchard {year}'
+
 # Use this for debugging locally, exclude from the build
-# app.run(port=4050 )
+app.run(port=4050 )
