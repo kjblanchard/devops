@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: flask-webapp
-          image: enf3rno/sg_flask
+          image: enf3rno/sg_flask:dev
           resources:
             requests:
               memory: "512Mi"

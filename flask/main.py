@@ -12,3 +12,6 @@ def get_days_until_wedding():
     wedding_day = datetime(year=2023, day=21, month=1)
     diff = wedding_day - time
     return diff.days
+
+# Use this for debugging locally, exclude from the build
+# app.run(port=4050 )
