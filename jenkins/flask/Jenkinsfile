@@ -4,7 +4,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Pipeline is building'
-                docker image ls
+                sh('docker image ls')
             }
         }
         stage('Push') {
