@@ -61,7 +61,7 @@
         chain: PREROUTING
         in_interface: "{{ interface_name }}"
         protocol: tcp
-        destination_port: {{ nuc_jenkins_listening_port }}
+        destination_port: "{{ nuc_jenkins_listening_port }}"
         jump: DNAT
         to_destination: "{{ minikube_ip_address }}:{{ minikube_jenkins_node_port }}"
       become: yes
