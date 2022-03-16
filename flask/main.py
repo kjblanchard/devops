@@ -22,4 +22,4 @@ def get_footer_text():
     return f'Copyright Kevin Blanchard {year}'
 
 # Use this for debugging locally, exclude from the build
-app.run(port=4050 )
+# app.run(port=4050 )
