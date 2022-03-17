@@ -40,7 +40,12 @@ def call(Map config_map = [:], Map stages_map = [:], String agent_yaml_string = 
         }
     }
     stages {
+        stage('Testing'){
+            script{
         stages_map.docker()
+
+            }
+        }
     }
     }
 
