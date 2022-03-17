@@ -6,5 +6,5 @@ def stages_map = [:]
 // @Library will import the shared library to our Jenkins job. (Remember first-shared-lib is the name we gave while configuring shared libraries in Manage Jenkins. Refer to the previous section of this article).
 // welcomeJob will invoke the call() function in welcomeJob.groovy created under vars folder. The ‘lambdatest’ string will be sent as a parameter to the call() function.
 //This is going to be the 'main' jenkinsfile that can build all of the applications here when there is changes.
-dockerHelper(config_map, stages_map)
+// dockerHelper(config_map, stages_map)
 pipelineTemplate(config_map, stages_map)
