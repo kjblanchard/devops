@@ -16,7 +16,4 @@ void get_changed_files(Map config_map){
         returnStdout: true
     ).trim()
     config_map.changed_files = changed_files
-
-    echo changed_files
-
 }

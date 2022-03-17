@@ -38,25 +38,7 @@ def call(Map config_map = [:], Map stages_map = [:], String agent_yaml_string = 
         }
     }
     stages {
-        stage ('Get git info'){
-        steps {
-            container('git')
-            {
-            gitHelper(config_map)
-            }
-        }
-        }
-        stage('Push') {
-        steps {
-            container('docker') {
-            sh """
-            ls
-            cd flask
-                docker image build -t sg_flask:$BUILD_NUMBER .
-            """
-            }
-        }
-        }
+        stages_map.docker
     }
     }
 
