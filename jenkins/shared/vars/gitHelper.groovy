@@ -2,27 +2,21 @@ import groovy.transform.Field
 @Field changed_files
 
 
-def call(){
+def call(Map config_map){
     echo 'Just got into the githelper call'
-    get_changed_files()
+    get_changed_files(config_map)
 }
-void get_changed_files(){
+
+void get_changed_files(Map config_map){
     echo 'Just got to the changed files section'
-    def script_content = libraryResource('get_changed_files.sh')
-    writeFile file: './get_changed_files.sh', text: script_content
-    sh(script: 'chmod +x get_changed_files.sh')
-    def changed_files_1 = sh(
+    changed_files = sh(
         script: """
-            ls
-            git diff --name-only HEAD HEAD~1
+            git diff-tree --no-commit-id --name-only -r HEAD
         """,
         returnStdout: true
-    )
-    echo changed_files_1
-    def changed_files = sh(
-        script: './get_changed_files.sh',
-        returnStdout: true
-    ).split()
+    ).trim()
+    config_map.changed_files = changed_files
+
     echo changed_files
 
 }

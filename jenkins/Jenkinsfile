@@ -1,5 +1,6 @@
 @Library('docker') _
 welcomeJob('lambdatest')
+def config_map = [:]
 // Note: _ (underscore) is a must after the @Library annotation.
 // @Library will import the shared library to our Jenkins job. (Remember first-shared-lib is the name we gave while configuring shared libraries in Manage Jenkins. Refer to the previous section of this article).
 // welcomeJob will invoke the call() function in welcomeJob.groovy created under vars folder. The ‘lambdatest’ string will be sent as a parameter to the call() function.
