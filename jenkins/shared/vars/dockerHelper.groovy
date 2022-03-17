@@ -1,5 +1,3 @@
-
-@Field stage
 def call(Map config_map = [:], Map stage_map = [:])
 {
     Closure stage =
