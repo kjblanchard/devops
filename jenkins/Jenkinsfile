@@ -1,7 +1,5 @@
-import groovy.transform.Field
-@Field agent_yaml
 @Library('supergoon') _
-agent_yaml = """
+def agent_yaml = """
     apiVersion: v1
     kind: Pod
     metadata:
