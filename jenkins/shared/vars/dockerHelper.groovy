@@ -1,6 +1,11 @@
 def call(Map config_map = [:], Map stage_map = [:])
 {
-        def stage = {stage ('Get git info'){
+        stage_map.docker = stage
+
+}
+
+def stage(){
+        stage ('Get git info'){
         steps {
             container('git')
             {
@@ -20,7 +25,4 @@ def call(Map config_map = [:], Map stage_map = [:])
         }
         }
         }
-
-        stage_map.docker = stage
-
-    }
+}
