@@ -57,6 +57,7 @@
       with_items:
        - '/kube_host/letsencrypt'
        - '/kube_host/challenge'
+       - '/kube_host/jenkins-volume'
     - name: Add prometheus repo
       kubernetes.core.helm_repository:
         name: prometheus-community

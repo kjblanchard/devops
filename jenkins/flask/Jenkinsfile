@@ -4,7 +4,8 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Pipeline is building'
-                sh('docker image ls')
+                dir('./flask')
+                def docker_image = docker.build('kevin:test')
             }
         }
         stage('Push') {
