@@ -1,31 +1,4 @@
 @Library('supergoon') _
-def agent_yaml = """
-apiVersion: v1
-kind: Pod
-metadata:
-labels:
-  component: ci
-spec:
-  serviceAccountName: jenkins
-  containers:
-  - name: docker
-    image: docker:latest
-    command:
-    - cat
-    tty: true
-    volumeMounts:
-    - mountPath: /var/run/docker.sock
-      name: docker-sock
-  - name: git
-    image: alpine/git:latest
-    command:
-    - cat
-    tty: true
-  volumes:
-    - name: docker-sock
-      hostPath:
-        path: /var/run/docker.sock
-    """
 welcomeJob('lambdatest')
 def config_map = [:]
 def stages_map = [:]
@@ -34,38 +7,4 @@ def stages_map = [:]
 // welcomeJob will invoke the call() function in welcomeJob.groovy created under vars folder. The ‘lambdatest’ string will be sent as a parameter to the call() function.
 //This is going to be the 'main' jenkinsfile that can build all of the applications here when there is changes.
 // dockerHelper(config_map, stages_map)
-// pipelineTemplate(config_map, stages_map)
-    pipeline {
-        agent {
-            kubernetes {
-                defaultContainer 'jnlp'
-                yaml agent_yaml
-            }
-        }
-        stages {
-            stage('Initialize Pipeline Template') {
-                steps{
-                    script{
-                        container('git')
-                        {
-                            echo 'Just got to the changed files section'
-                            def changed_files = sh(
-                                script: """
-                                echo hi
-                                ls
-                                    git diff-tree --no-commit-id --name-only -r HEAD
-                                """,
-                                returnStdout: true
-                            ).trim()
-                            echo 'just finished this'
-                            config_map.changed_files = changed_files
-                            echo 'now just finished this'
-
-                        }
-                        // stages_map.docker(config_map)
-
-                    }
-
-                }
-
-            }}}
+pipelineTemplate(config_map, stages_map)
