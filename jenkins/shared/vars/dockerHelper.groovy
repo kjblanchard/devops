@@ -3,10 +3,7 @@ def call(Map config_map = [:], Map stage_map = [:])
     Closure stage =
     {
         stage ('Get git info'){
-            container('git')
-            {
             gitHelper(config_map)
-            }
         }
         stage('Push') {
             container('docker') {
