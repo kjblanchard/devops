@@ -30,6 +30,8 @@ agent_yaml = """
 
 def call(Map config_map = [:], Map stages_map = [:], String agent_yaml_string = agent_yaml)
 {
+    echo stages_map.docker
+    stages_map.docker()
     pipeline {
     agent {
         kubernetes {
