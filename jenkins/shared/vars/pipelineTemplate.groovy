@@ -1,4 +1,6 @@
-def agent_yaml = """
+import groovy.transform.Field
+@Field agent_yaml
+agent_yaml = """
     apiVersion: v1
     kind: Pod
     metadata:
