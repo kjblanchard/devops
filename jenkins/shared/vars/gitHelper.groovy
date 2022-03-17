@@ -20,7 +20,9 @@ def call(){
 }
 void get_changed_files(){
     def path = get_path()
-    echo path
+    sh(
+        script: "ls ${path}"
+    )
     echo 'Just got to the changed files section'
     def script_content = libraryResource('get_changed_files.sh')
     writeFile file: './get_changed_files.sh', text: script_content
