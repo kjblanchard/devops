@@ -1,5 +1,5 @@
 import groovy.transform.Field
-@Field changed_files
+// @Field changed_files
 
 
 def call(Map config_map){
@@ -9,7 +9,7 @@ def call(Map config_map){
 
 void get_changed_files(Map config_map){
     echo 'Just got to the changed files section'
-    changed_files = sh(
+    def changed_files = sh(
         script: """
         echo hi
         ls
