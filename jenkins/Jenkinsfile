@@ -4,26 +4,26 @@ apiVersion: v1
 kind: Pod
 metadata:
 labels:
-component: ci
+  component: ci
 spec:
-serviceAccountName: jenkins
-containers:
-- name: docker
+  serviceAccountName: jenkins
+  containers:
+  - name: docker
     image: docker:latest
     command:
     - cat
     tty: true
     volumeMounts:
     - mountPath: /var/run/docker.sock
-    name: docker-sock
-- name: git
+      name: docker-sock
+  - name: git
     image: alpine/git:latest
     command:
     - cat
     tty: true
-volumes:
+  volumes:
     - name: docker-sock
-    hostPath:
+      hostPath:
         path: /var/run/docker.sock
     """
 welcomeJob('lambdatest')
