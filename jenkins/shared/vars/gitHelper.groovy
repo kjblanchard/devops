@@ -15,7 +15,7 @@ void get_changed_files(){
         script: """
             ls
             git diff --name-only HEAD HEAD~1
-        """
+        """,
         returnStdout: true
     )
     echo changed_files_1
