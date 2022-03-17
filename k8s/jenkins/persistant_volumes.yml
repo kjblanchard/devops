@@ -12,3 +12,15 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   hostPath:
     path: /kube_host/jenkins-volume
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-volume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 20Gi
