@@ -34,7 +34,8 @@ spec:
         container('docker') {
           sh """
           ls
-             docker build -t spring-petclinic-demo:$BUILD_NUMBER .
+          cd flask
+             docker image build -t sg_flask:$BUILD_NUMBER .
           """
         }
       }
