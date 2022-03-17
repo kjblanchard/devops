@@ -12,7 +12,7 @@ void get_changed_files(){
     writeFile file: './get_changed_files.sh', text: script_content
     def changed_files = sh(
         script: './get_changed_files.sh',
-        returnStdout: True
+        returnStdout: true
     ).split()
     echo changed_files
 
