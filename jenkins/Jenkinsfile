@@ -1,4 +1,4 @@
-@Library('docker') _
+@Library('supergoon') _
 welcomeJob('lambdatest')
 def config_map = [:]
 // Note: _ (underscore) is a must after the @Library annotation.
