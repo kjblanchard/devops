@@ -39,10 +39,10 @@ def call(Map config_map = [:], Map stages_map = [:], String agent_yaml_string = 
         }
         stages {
             stage('Initialize Pipeline Template') {
-                steps{
-                    script{
                         container('git')
                         {
+                steps{
+                    script{
                             echo 'Just got to the changed files section'
                             def changed_files = sh(
                                 script: """
