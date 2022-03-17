@@ -44,7 +44,7 @@ spec:
       steps {
         container('git')
         {
-          gitHelper()
+          gitHelper(config_map)
         }
       }
     }
