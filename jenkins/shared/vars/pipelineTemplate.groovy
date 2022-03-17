@@ -39,11 +39,12 @@ def call(Map config_map = [:], Map stages_map = [:], String agent_yaml_string = 
         }
         stages {
             stage('Initialize Pipeline Template') {
-                        container('git')
-                        {
                 steps{
                     script{
+                        container('git')
+                        {
                             echo 'Just got to the changed files section'
+                            sh(script: 'echo hi')
                             def changed_files = sh(
                                 script: """
                                 echo hi
@@ -55,6 +56,8 @@ def call(Map config_map = [:], Map stages_map = [:], String agent_yaml_string = 
                             echo 'just finished this'
                             config_map.changed_files = changed_files
                             echo 'now just finished this'
+
+                        }
 
                         }
                         // stages_map.docker(config_map)
