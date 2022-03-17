@@ -5,12 +5,11 @@ import groovy.transform.Field
 def call(Map config_map){
     echo 'Just got into the githelper call'
     // get_changed_files(config_map)
-        echo 'Just got to the changed files section'
+    echo 'Just got to the changed files section'
+    sh(script: 'echo hi')
     changed_files = sh(
         script: """
         echo hi
-        ls
-            git diff-tree --no-commit-id --name-only -r HEAD
         """,
         returnStdout: true
     ).trim()
