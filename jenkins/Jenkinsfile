@@ -1,3 +1,5 @@
+import groovy.transform.Field
+@Field agent_yaml
 @Library('supergoon') _
 agent_yaml = """
     apiVersion: v1
