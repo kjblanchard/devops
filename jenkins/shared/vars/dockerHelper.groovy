@@ -1,10 +1,8 @@
+
+@Field stage
 def call(Map config_map = [:], Map stage_map = [:])
 {
-        stage_map.docker = stage
-
-}
-
-def stage(){
+    Closure stage =
         stage ('Get git info'){
         steps {
             container('git')
@@ -23,5 +21,7 @@ def stage(){
             """
             }
         }
-        }
+        stage_map.docker = stage
 }
+}
+
