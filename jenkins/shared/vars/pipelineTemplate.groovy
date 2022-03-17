@@ -38,7 +38,7 @@ def call(Map config_map = [:], Map stages_map = [:], String agent_yaml_string = 
         }
     }
     stages {
-        stages_map.docker
+        stages_map.docker()
     }
     }
 
