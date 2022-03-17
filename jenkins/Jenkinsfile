@@ -26,6 +26,11 @@ spec:
     volumeMounts:
     - mountPath: /var/run/docker.sock
       name: docker-sock
+  - name: git
+    image: alpine/git:latest
+    command:
+    - cat
+    tty: true
   volumes:
     - name: docker-sock
       hostPath:
@@ -36,7 +41,7 @@ spec:
   stages {
     stage ('Get git info'){
       steps {
-        container('docker')
+        container('git')
         {
           gitHelper()
         }
