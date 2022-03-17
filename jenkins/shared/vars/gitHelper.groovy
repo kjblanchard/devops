@@ -10,6 +10,7 @@ void get_changed_files(){
     echo 'Just got to the changed files section'
     def script_content = libraryResource('get_changed_files.sh')
     writeFile file: './get_changed_files.sh', text: script_content
+    sh(script: 'chmod +x get_changed_files.sh')
     def changed_files = sh(
         script: './get_changed_files.sh',
         returnStdout: true
