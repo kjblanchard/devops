@@ -1,4 +1,4 @@
-resource "kubernetes_deployment" "{var.deployment_name}_deployment" {
+resource "kubernetes_deployment" "k8s_deployment" {
   metadata {
     name      = "${var.deployment_name}-deployment"
     labels = {
