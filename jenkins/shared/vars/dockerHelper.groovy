@@ -2,25 +2,30 @@ def call(Map config = [:], ArrayList stage_list )
 {
     stage_list.add(
     {
-        stage('Push') {
-            container('docker') {
+        stage('Determine Builds') {
                 def changed_files = config.changed_git_files
-                echo changed_files
                 if (changed_files =~ /docker/){
-                    echo 'DOCKER CHANGED'
+                    docker_image_builder(stage_list, 'sg_flask')
                 }
                 if(changed_files =~ /git/){
                     echo 'GIT CHANGED'
                 }
-            sh """
-            ls
-            cd flask
-                docker image build -t sg_flask:$BUILD_NUMBER .
-            """
-            }
         }
     }
     )
         // stage_map.docker = stage
+}
+
+def docker_image_builder(ArrayList stage_list, String build_name) {
+    stage_list.add({
+        stage("Build ${build_name} image")
+            container('docker') {
+
+                sh """
+                cd flask
+                docker image build -t ${build_name}:$BUILD_NUMBER .
+                """
+            }
+    })
 }
 
