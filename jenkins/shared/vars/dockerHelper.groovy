@@ -8,6 +8,9 @@ def call(Map config = [:], ArrayList stage_list )
                 if (changed_files ==~ 'docker'){
                     echo 'DOCKER CHANGED'
                 }
+                if(changed_files ==~ 'git'){
+                    echo 'GIT CHANGED'
+                }
             sh """
             ls
             cd flask

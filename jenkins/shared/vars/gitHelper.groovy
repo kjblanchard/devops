@@ -14,7 +14,7 @@ def call(Map config_map, ArrayList stage_list){
 void get_changed_files(Map config_map){
     def changed_files = sh(
         script: """
-            git diff-tree --no-commit-id --name-only -r HEAD
+            git diff --name-only HEAD HEAD~1
         """,
         returnStdout: true
     ).trim()
