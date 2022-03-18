@@ -1,12 +1,15 @@
 resource "kubernetes_deployment" "flask_deployment" {
   metadata {
     name      = "flask-deployment"
+    labels = {
+      app = "flask-deployment"
+    }
   }
   spec {
     replicas = 1
     selector {
       match_labels = {
-        app = "flask-deployment"
+        app = "flask-webapp"
       }
     }
     template {

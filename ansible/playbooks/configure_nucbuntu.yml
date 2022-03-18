@@ -20,6 +20,7 @@
         - bash-completion
         - gnupg
         - software-properties-common
+        - awscli
 
       # Install kubectl
     - name: Add Kubectl Repo Key
@@ -63,6 +64,9 @@
         dest: /usr/local/bin/terragrunt
         mode: '0740'
         owner: "{{ username }}"
+        # install aws cli
+
+
 
 
   # Install helm
@@ -114,6 +118,15 @@
         owner: "{{ username }}"
         remote_src: True
       become: true
+
+    # - name: Register Aws Cli Installed
+    #   command: which aws
+    #   register: aws_installed
+    #   ignore_errors: true
+    # - name: Run the aws cli installer
+    #   ansible.builtin.shell: /tmp/aws/install
+    #   become: true
+    #   when: aws_installed.rc != 0
 
     # Ensure folders are created for the kubernetes bindmounts for cert storage
     - name: Create folder for lets encrypt
