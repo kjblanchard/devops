@@ -1,32 +1,7 @@
-resource "kubernetes_deployment" "flask_deployment" {
-  metadata {
-    name      = "flask-deployment"
-    labels = {
-      app = "flask-deployment"
-    }
-  }
-  spec {
-    replicas = 1
-    selector {
-      match_labels = {
-        app = "flask-webapp"
-      }
-    }
-    template {
-      metadata {
-        labels = {
-          app = "flask-webapp"
-        }
-      }
-      spec {
-        container {
-          image = "enf3rno/sg_flask:dev"
-          name  = "flask-webapp"
-          port {
-            container_port = 80
-          }
-        }
-      }
-    }
-  }
+module "flask_deployment" {
+  source          = "../modules/deployment"
+  image_name      = "enf3rno/quotegenerator"
+  image_tag       = "dev"
+  deployment_name = "flask"
+  container_port  = 80
 }
