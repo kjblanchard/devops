@@ -2,6 +2,33 @@
 welcomeJob('lambdatest')
 def config_map = [:]
 def stages_map = [:]
+def agent_yaml = """
+apiVersion: v1
+kind: Pod
+metadata:
+labels:
+  component: ci
+spec:
+  serviceAccountName: jenkins
+  containers:
+  - name: docker
+    image: docker:latest
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+    - mountPath: /var/run/docker.sock
+      name: docker-sock
+  - name: git
+    image: alpine/git:latest
+    command:
+    - cat
+    tty: true
+  volumes:
+    - name: docker-sock
+      hostPath:
+        path: /var/run/docker.sock
+    """
 // Note: _ (underscore) is a must after the @Library annotation.
 // @Library will import the shared library to our Jenkins job. (Remember first-shared-lib is the name we gave while configuring shared libraries in Manage Jenkins. Refer to the previous section of this article).
 // welcomeJob will invoke the call() function in welcomeJob.groovy created under vars folder. The ‘lambdatest’ string will be sent as a parameter to the call() function.
