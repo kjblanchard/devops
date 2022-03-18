@@ -4,25 +4,12 @@ def call(Map config_map, ArrayList stage_list){
         {
             container('git')
             {
-                echo 'Just got into the githelper call'
                 get_changed_files(config_map)
-            }
-            container('docker')
-            {
-                sh 'ls'
             }
         }
     })
 }
 
 void get_changed_files(Map config_map){
-    sh(script: 'git diff --name-only HEAD HEAD~1')
-    def changed_files = sh(
-        script: """
-        ls
-        git diff --name-only HEAD HEAD~1
-        """,
-        returnStdout: true
-    ).trim()
-    config_map.changed_files = changed_files
+    config_map.hi = sh(script: 'git diff --name-only HEAD HEAD~1', returnStdout: true)
 }
