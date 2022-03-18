@@ -35,7 +35,7 @@ def docker_image_pusher(ArrayList stage_list, String build_name) {
             container('docker') {
 
                 sh """
-                    docker image push ${build_name}:$BUILD_NUMBER .
+                    docker image push ${build_name}:$BUILD_NUMBER
                 """
             }
     })
