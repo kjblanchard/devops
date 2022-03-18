@@ -1,7 +1,3 @@
-import groovy.transform.Field
-// @Field changed_files
-
-
 def call(Map config_map, ArrayList stage_list){
     stage_list.add({
         stage('Git Helper')

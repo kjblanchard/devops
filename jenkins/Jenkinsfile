@@ -21,7 +21,7 @@ pipeline {
       stage('Initialize Pipeline Template') {
           steps{
               script {
-                stages_map.each({key, val ->
+                stages_list.each({key, val ->
                     val(config_map, stages_list)
                   })
                 }
