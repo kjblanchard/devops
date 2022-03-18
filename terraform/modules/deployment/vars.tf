@@ -17,7 +17,7 @@ variable "container_port" {
   description = "The port that the container will have open"
 }
 
-variable "volume_mount" {
+variable "volume_mounts" {
   type = list(object({
     mount_path = string,
     name = string
