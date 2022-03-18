@@ -25,6 +25,13 @@ resource "kubernetes_deployment" "k8s_deployment" {
           port {
             container_port = "${var.container_port}"
           }
+          dynamic "volume_mount"{
+              for_each = var.volume_mounts
+              content {
+                  mount_path = volume_mount.mount_path
+                  name = volume_mount.name
+              }
+          }
         }
       }
     }
