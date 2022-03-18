@@ -4,10 +4,8 @@ def call(Map config_map, ArrayList stage_list){
         {
             container('git')
             {
-                script{
                     get_changed_files(config_map)
 
-                }
             }
         }
     })

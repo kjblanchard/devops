@@ -5,10 +5,10 @@ def call(Map config = [:], ArrayList stage_list )
         stage('Push') {
             container('docker') {
                 def changed_files = config.changed_files
-                if (changed_files ==~ 'docker'){
+                if (changed_files =~ /docker/){
                     echo 'DOCKER CHANGED'
                 }
-                if(changed_files ==~ 'git'){
+                if(changed_files =~ /git/){
                     echo 'GIT CHANGED'
                 }
             sh """
