@@ -1,0 +1,24 @@
+# Remove temporary Terragrunt cache folder
+**/.terragrunt-cache/**
+.vscode/
+
+# Pycharm
+.idea/**
+
+# MacOS .DS_Store
+**/.DS_Store
+
+.*.sw?
+.idea
+terragrunt.iml
+vendor
+.terraform
+.vscode
+*.tfstate
+*.tfstate.backup
+*.out
+.terragrunt-cache
+.bundle
+.ruby-version
+.terraform.lock.hcl
+terragrunt
