@@ -47,10 +47,10 @@ dockerHelper(config_map, stages_map)
             stage('Initialize Pipeline Template') {
                 steps{
                     script {
-                      stages_map.each({key, val -> {
+                      stages_map.each({key, val ->
                           val(config_map)
 
-                      }})
+                      })
                         // stages_map.docker(config_map)
 
                       }
