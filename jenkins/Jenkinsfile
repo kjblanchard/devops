@@ -1,16 +1,15 @@
+// Note: _ (underscore) is a must after the @Library annotation.
+//supergoon is defined within jenkins as a shared lib
 @Library('supergoon') _
-welcomeJob('lambdatest')
 def config_map = [:]
 def stages_list = []
-// Note: _ (underscore) is a must after the @Library annotation.
-// @Library will import the shared library to our Jenkins job. (Remember first-shared-lib is the name we gave while configuring shared libraries in Manage Jenkins. Refer to the previous section of this article).
-//This is going to be the 'main' jenkinsfile that can build all of the applications here when there is changes.
 def agent_yaml = libraryResource('pod_yaml.yml')
-//Run these calls to build your stages list
+
+//Run these calls to build your stages list, this is where you should edit.
 gitHelper(config_map, stages_list)
 dockerHelper(config_map, stages_list)
 
-//The pipeline template to use
+//The pipeline template to use, do not modify after here.
 pipeline {
   agent {
       kubernetes {

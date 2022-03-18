@@ -1,9 +1,13 @@
-def call(Map config_map = [:], ArrayList stage_list )
+def call(Map config = [:], ArrayList stage_list )
 {
     stage_list.add(
     {
         stage('Push') {
             container('docker') {
+                def changed_files = config.changed_files
+                if (changed_files ==~ 'docker'){
+                    echo 'DOCKER CHANGED'
+                }
             sh """
             ls
             cd flask
