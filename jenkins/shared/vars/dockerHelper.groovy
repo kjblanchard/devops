@@ -1,8 +1,7 @@
-def call(Map config_map = [:], Map stage_map = [:])
+def call(Map config_map = [:], Map stage_list = [:])
 {
-    Closure stage =
+    stage_list.add(
     {
-        gitHelper(config_map)
         stage('Push') {
             container('docker') {
             sh """
@@ -13,6 +12,7 @@ def call(Map config_map = [:], Map stage_map = [:])
             }
         }
     }
-        stage_map.docker = stage
+    )
+        // stage_map.docker = stage
 }
 

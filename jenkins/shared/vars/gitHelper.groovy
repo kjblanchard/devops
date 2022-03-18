@@ -2,13 +2,17 @@ import groovy.transform.Field
 // @Field changed_files
 
 
-def call(Map config_map){
-    container('git')
-    {
-        echo 'Just got into the githelper call'
-        get_changed_files(config_map)
-
-    }
+def call(Map config_map, List stage_list){
+    stage_list.add({
+        stage('Git Helper')
+        {
+            container('git')
+            {
+                echo 'Just got into the githelper call'
+                get_changed_files(config_map)
+            }
+        }
+    })
 }
 
 void get_changed_files(Map config_map){
