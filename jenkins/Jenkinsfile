@@ -7,4 +7,5 @@ def stages_map = [:]
 // welcomeJob will invoke the call() function in welcomeJob.groovy created under vars folder. The ‘lambdatest’ string will be sent as a parameter to the call() function.
 //This is going to be the 'main' jenkinsfile that can build all of the applications here when there is changes.
 // dockerHelper(config_map, stages_map)
-pipelineTemplate(config_map, stages_map)
+pipeline = pipelineTemplate(config_map, stages_map)
+pipeline()

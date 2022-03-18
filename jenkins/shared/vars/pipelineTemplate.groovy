@@ -30,6 +30,7 @@ spec:
 
 def call(Map config_map = [:], Map stages_map = [:], String agent_yaml_string = agent_yaml)
 {
+    def pipeline = {
     pipeline {
         agent {
             kubernetes {
@@ -67,4 +68,6 @@ def call(Map config_map = [:], Map stages_map = [:], String agent_yaml_string = 
                 }
             }
         }
+    }
+    return pipeline
     }
