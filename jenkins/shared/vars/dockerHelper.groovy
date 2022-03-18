@@ -1,7 +1,6 @@
-def call(Map config = [:], ArrayList stage_list )
-{
+def call(Map config = [:], ArrayList stage_list ) {
     def buildable_projects_map = [
-        docker: 'flask',
+        flask: 'flask',
         nginx: 'nginx'
 
     ]
@@ -9,38 +8,31 @@ def call(Map config = [:], ArrayList stage_list )
         stage('Determine Builds') {
             def changed_files = config.changed_git_files
             buildable_projects_map.each({key, value ->
-            if(changed_files.contains(key))
-            {
-                docker_image_builder(stage_list, "sg_${value}",value)
-                docker_image_pusher(stage_list, "sg_${value}")
-            }
+                if(changed_files.contains(key)) {
+                    docker_image_builder(stage_list, "sg_${value}",value)
+                    docker_image_pusher(stage_list, "sg_${value}")
+                }
             })
-            // if (changed_files =~ /docker/){
-            //     docker_image_builder(stage_list, 'sg_flask', 'flask')
-            //     docker_image_pusher(stage_list, 'sg_flask')
-            // }
-            // if(changed_files =~ /git/){
-            //     echo 'GIT CHANGED'
-            // }
         }
     })
 }
 
 def docker_image_builder(ArrayList stage_list, String build_name, String folder_name) {
     stage_list.add({
-        stage("Build ${build_name} image")
+        stage("Build ${build_name} image") {
             container('docker') {
-
                 sh """
                     cd ${folder_name}
                     docker image build -t enf3rno/${build_name}:$BUILD_NUMBER .
                 """
             }
+        }
     })
 }
+
 def docker_image_pusher(ArrayList stage_list, String build_name) {
     stage_list.add({
-        stage("Push ${build_name} image")
+        stage("Push ${build_name} image") {
             container('docker') {
                 withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'password', usernameVariable: 'username')]) {
                     sh """
@@ -49,6 +41,7 @@ def docker_image_pusher(ArrayList stage_list, String build_name) {
                     """
                 }
             }
+        }
     })
 }
 
