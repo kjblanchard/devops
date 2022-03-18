@@ -1,15 +1,27 @@
 def call(Map config = [:], ArrayList stage_list )
 {
+    def buildable_projects_map = {
+        docker: 'flask',
+        nginx: 'nginx'
+
+    }
     stage_list.add({
         stage('Determine Builds') {
             def changed_files = config.changed_git_files
-            if (changed_files =~ /docker/){
-                docker_image_builder(stage_list, 'sg_flask', 'flask')
-                docker_image_pusher(stage_list, 'sg_flask')
+            buildable_projects_map.each({key, value ->
+            if(changed_files.contains(key))
+            {
+                docker_image_builder(stage_list, "sg_${value}",value)
+                docker_image_pusher(stage_list, "sg_${value}")
             }
-            if(changed_files =~ /git/){
-                echo 'GIT CHANGED'
-            }
+            })
+            // if (changed_files =~ /docker/){
+            //     docker_image_builder(stage_list, 'sg_flask', 'flask')
+            //     docker_image_pusher(stage_list, 'sg_flask')
+            // }
+            // if(changed_files =~ /git/){
+            //     echo 'GIT CHANGED'
+            // }
         }
     })
 }
