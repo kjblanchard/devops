@@ -21,7 +21,7 @@ resource "kubernetes_deployment" "k8s_deployment" {
       spec {
         container {
           image = "${var.image_name}:${var.image_tag}"
-          name  = "${var.image_name}"
+          name  = "${var.deployment_name}"
           port {
             container_port = "${var.container_port}"
           }
