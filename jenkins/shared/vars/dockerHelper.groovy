@@ -21,7 +21,7 @@ def docker_image_builder(ArrayList stage_list, String build_name, String folder_
 
                 sh """
                     cd ${folder_name}
-                    docker image build -t ${build_name}:$BUILD_NUMBER .
+                    docker image build -t enf3rno/${build_name}:$BUILD_NUMBER .
                 """
             }
     })
