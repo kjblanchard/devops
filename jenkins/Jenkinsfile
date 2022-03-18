@@ -22,7 +22,7 @@ pipeline {
           steps{
               script {
                 stages_map.each({key, val ->
-                    val(config_map)
+                    val(config_map, stages_list)
                   })
                 }
               }
