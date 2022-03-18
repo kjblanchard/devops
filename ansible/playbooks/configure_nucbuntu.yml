@@ -1,20 +1,27 @@
 ---
 #Inventory file is in /etc/ansible/hosts
-#run command ansible-playbook configure_nucbuntu.yml -K
+#run command ansible-playbook configure_nucbuntu.yml -u 'redacted' -K
 #need to add variables to only do this if which command fails
+#TODO need to add K9s (currently it is a pain to install)
 - name: Install all dependencies
   hosts: nucbuntu
-  user: kevin
+  vars:
+    username: kevin
   tasks:
 
-  # Install Kubectl
-    - name: Install Kubectl Dependencies
+    - name: Install apt Dependencies
       become: true
       apt:
         pkg:
         - apt-transport-https
         - ca-certificates
         - curl
+        - git
+        - bash-completion
+        - gnupg
+        - software-properties-common
+
+      # Install kubectl
     - name: Add Kubectl Repo Key
       become: true
       apt_key:
@@ -29,6 +36,34 @@
       become: true
       apt:
         name: kubectl
+    - name: Enable kubectl bash autocompletion
+      lineinfile:
+        path: ~/.bashrc
+        line: 'source <(kubectl completion bash)'
+        # Install terraform
+    - name: Add terraform Repo Key
+      become: true
+      apt_key:
+        keyring: /usr/share/keyrings/terraform.gpg
+        url: https://apt.releases.hashicorp.com/gpg
+    - name: Add terraform Apt Repo
+      become: true
+      apt_repository:
+        repo: "deb [arch=amd64] https://apt.releases.hashicorp.com focal main"
+        filename: terraform
+    - name: Install terraform
+      become: true
+      apt:
+        name: terraform
+# install terragrunt
+    - name: Download terragrunt
+      become: true
+      get_url:
+        url: https://github.com/gruntwork-io/terragrunt/releases/download/v0.36.6/terragrunt_linux_amd64
+        dest: /usr/local/bin/terragrunt
+        mode: '0740'
+        owner: "{{ username }}"
+
 
   # Install helm
     - name: Add Helm Apt Repo
@@ -48,6 +83,38 @@
       become: true
       apt:
         name: helm
+
+    # Install k8s tools
+    - name: Clone kubens/kubectx git
+      git:
+       repo: https://github.com/ahmetb/kubectx.git
+       dest: ~/git/kubectx
+       clone: yes
+       update: yes
+    - name: Create symlinks for kubens and kubectx
+      file:
+        src: "/home/kevin/git/kubectx/{{ item }}"
+        dest: "/usr/local/bin/{{ item }}"
+        state: link
+      with_items:
+        - kubectx
+        - kubens
+    - name: Download k9s
+      become: true
+      get_url:
+        url: https://github.com/derailed/k9s/releases/download/v0.25.18/k9s_Linux_x86_64.tar.gz
+        dest: /tmp/k9s.tgz
+        mode: '0740'
+        owner: "{{ username }}"
+    - name: Extract k9s to folder
+      unarchive:
+        src: /tmp/k9s.tgz
+        dest: /usr/local/bin
+        mode: '0740'
+        owner: "{{ username }}"
+        remote_src: True
+      become: true
+
     # Ensure folders are created for the kubernetes bindmounts for cert storage
     - name: Create folder for lets encrypt
       become: true

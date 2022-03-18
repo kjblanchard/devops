@@ -1,8 +1,8 @@
 # Add in the iptables entries if they need to be made.
 #Make this more dnamic (take in vars)
+---
 - name: Setup Port Forwarding Rules to make minikube work off local
   hosts: nucbuntu
-  user: kevin
   vars:
     minikube_ip_address: 192.168.49.2
     minikube_http_port: 30007
@@ -10,6 +10,7 @@
     minikube_jenkins_node_port: 32000
     nuc_jenkins_listening_port: 8989
     interface_name: wlp0s20f3
+
   tasks:
     - name: Accept Port 80 Inbound into IpTables
       ansible.builtin.iptables:
