@@ -1,4 +1,4 @@
-def call(Map config_map = [:], Map stage_list = [:])
+def call(Map config_map = [:], ArrayList stage_list )
 {
     stage_list.add(
     {
