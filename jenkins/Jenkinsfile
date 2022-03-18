@@ -1,5 +1,7 @@
 @Library('supergoon') _
 welcomeJob('lambdatest')
+gitHelper(config_map, stages_list)
+dockerHelper(config_map, stages_list)
 def config_map = [:]
 def stages_list = []
 // Note: _ (underscore) is a must after the @Library annotation.
@@ -7,8 +9,6 @@ def stages_list = []
 //This is going to be the 'main' jenkinsfile that can build all of the applications here when there is changes.
 def agent_yaml = libraryResource('pod_yaml.yml')
 //Run these calls to build your stages list
-// gitHelper(config_map, stages_list)
-dockerHelper(config_map, stages_list)
 
 //The pipeline template to use
 pipeline {
