@@ -16,13 +16,11 @@ def call(Map config_map, ArrayList stage_list){
 }
 
 void get_changed_files(Map config_map){
-    sh 'ls'
+    sh(script: 'git diff --name-only HEAD HEAD~1')
     def changed_files = sh(
         script: """
         ls
-        git status
-        git log --oneline
-            git diff --name-only HEAD HEAD~1
+        git diff --name-only HEAD HEAD~1
         """,
         returnStdout: true
     ).trim()
