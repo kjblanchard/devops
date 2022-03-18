@@ -22,3 +22,5 @@ vendor
 .ruby-version
 .terraform.lock.hcl
 terragrunt
+provider.tf
+backend.tf
