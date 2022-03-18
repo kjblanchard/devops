@@ -1,10 +1,10 @@
 def call(Map config = [:], ArrayList stage_list )
 {
-    def buildable_projects_map = {
+    def buildable_projects_map = [
         docker: 'flask',
         nginx: 'nginx'
 
-    }
+    ]
     stage_list.add({
         stage('Determine Builds') {
             def changed_files = config.changed_git_files
