@@ -7,11 +7,8 @@ def stages_list = []
 //This is going to be the 'main' jenkinsfile that can build all of the applications here when there is changes.
 def agent_yaml = libraryResource('pod_yaml.yml')
 //Run these calls to build your stages list
-echo 'git here'
 gitHelper(config_map, stages_list)
-echo 'got here'
 dockerHelper(config_map, stages_list)
-echo 'finished'
 
 //The pipeline template to use
 pipeline {
@@ -26,7 +23,7 @@ pipeline {
       stage('Initialize Pipeline Template') {
           steps{
               script {
-                stages_list.each({key, val ->
+                stages_list.each({val ->
                     val(config_map, stages_list)
                   })
                 }
