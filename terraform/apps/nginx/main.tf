@@ -34,3 +34,21 @@ module "flask_deployment" {
     },
   ]
 }
+module "flask_service" {
+  source          = "../../modules/service"
+  service_name      = "nginx-service"
+  service_selector       = "nginx-wedding"
+  service_type = "NodePort"
+  node_ports = [
+    {
+      port = 80
+      name           = "http"
+      node_port = 30007
+    },
+    {
+      port = 443
+      name           = "https"
+      node_port = 30008
+    }
+  ]
+}
