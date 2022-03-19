@@ -1,24 +1,98 @@
-# This is not used anymore, moved to terraform to deploy.
+# # This is not used anymore, moved to terraform to deploy.
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: flask-deployment
+#   labels:
+#     app: flask-deployment
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: flask-webapp
+#   template:
+#     metadata:
+#       labels:
+#         app: flask-webapp
+#     spec:
+#       containers:
+#         - name: flask-webapp
+#           image: enf3rno/sg_flask:dev
+#           imagePullPolicy: Always
+#           resources:
+#             requests:
+#               memory: "512Mi"
+#               cpu: "250m"
+#             limits:
+#               memory: "1Gi"
+#               cpu: "1"
+#           ports:
+#             - containerPort: 80
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: nginx-deployment
+#   labels:
+#     app: nginx-deployment
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: nginx-webapp
+#   template:
+#     metadata:
+#       labels:
+#         app: nginx-webapp
+#     spec:
+#       containers:
+#         - name: nginx-webapp
+#           image: enf3rno/sg_nginx
+#           resources:
+#             requests:
+#               memory: "512Mi"
+#               cpu: "250m"
+#             limits:
+#               memory: "1Gi"
+#               cpu: "1"
+#           volumeMounts:
+#             - mountPath: /etc/letsencrypt
+#               name: cert-volume
+#             - mountPath: /var/www/challenge/.well-known/acme-challenge
+#               name: acme-volume
+#           ports:
+#             - name: http
+#               containerPort: 80
+#             - name: https
+#               containerPort: 443
+
+#       volumes:
+#         - name: cert-volume
+#           hostPath:
+#             path: /kube_host/letsencrypt
+#         - name: acme-volume
+#           hostPath:
+#             path: /kube_host/challenge
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-deployment
+  name: runner
   labels:
-    app: flask-deployment
+    app: runner
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: flask-webapp
+      app: runner
   template:
     metadata:
       labels:
-        app: flask-webapp
+        app: runner
     spec:
       containers:
-        - name: flask-webapp
-          image: enf3rno/sg_flask:dev
-          imagePullPolicy: Always
+        - name: runner
+          image: enf3rno/sg_runner:1
           resources:
             requests:
               memory: "512Mi"
@@ -29,47 +103,3 @@ spec:
           ports:
             - containerPort: 80
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-  labels:
-    app: nginx-deployment
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: nginx-webapp
-  template:
-    metadata:
-      labels:
-        app: nginx-webapp
-    spec:
-      containers:
-        - name: nginx-webapp
-          image: enf3rno/sg_nginx
-          resources:
-            requests:
-              memory: "512Mi"
-              cpu: "250m"
-            limits:
-              memory: "1Gi"
-              cpu: "1"
-          volumeMounts:
-            - mountPath: /etc/letsencrypt
-              name: cert-volume
-            - mountPath: /var/www/challenge/.well-known/acme-challenge
-              name: acme-volume
-          ports:
-            - name: http
-              containerPort: 80
-            - name: https
-              containerPort: 443
-
-      volumes:
-        - name: cert-volume
-          hostPath:
-            path: /kube_host/letsencrypt
-        - name: acme-volume
-          hostPath:
-            path: /kube_host/challenge

@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from datetime import datetime
+import requests
 
 app = Flask(__name__)
 
@@ -20,6 +21,11 @@ def get_footer_text():
     time = datetime.now()
     year = time.year
     return f'Copyright Kevin Blanchard {year}'
+
+@app.route('/api/v1/start')
+def hello():
+    runner_response = requests.get('http://runner')
+    return runner_response
 
 # Use this for debugging locally, exclude from the build
 # app.run(port=4050 )
