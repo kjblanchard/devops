@@ -36,7 +36,7 @@ resource "kubernetes_deployment" "k8s_deployment" {
             for_each = length(var.volume_mounts) > 0 ? [1] : [0]
             content {
                 info = { for i in var.volume_mounts :
-                content => {
+                info => {
                   "mount_path" = i.mount_path,
                   "name"       = i.name
                 }
