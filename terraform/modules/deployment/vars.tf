@@ -17,27 +17,15 @@ variable "container_port" {
   description = "The port that the container will have open"
 }
 
-variable "volume_mounts" {
-  type = list(object({
-    mount_path = string,
-    name = string
-  }))
-  default = null
-  description = "The volume mounts to use"
+variable "volume_mount" {
+  description = "(Optional) Mount path from pods to volume"
+  default     = []
+}
+variable "volume_host_path" {
+  description = "(Optional) Mount path from pods to volume"
+  default     = []
 }
 variable "ports" {
-  type = list(map(
-  ))
-  default = null
-  description = "The volume mounts to use"
-}
-variable "volumes" {
-  type = list(map(
-  ))
-  default = null
-  description = "The volume mounts to use"
-}
-variable "volume_mount" {
   description = "(Optional) Mount path from pods to volume"
   default     = []
 }

@@ -7,38 +7,48 @@ module "flask_deployment" {
   volume_mounts = [
     {
       mount_path = "/etc/letsencrypt"
-      name = "cert-volume"
+      name       = "cert-volume"
     },
     {
       mount_path = "/var/www/challenge/.well-known/acme-challenge"
-      name = "acme-volume"
+      name       = "acme-volume"
     }
   ]
   ports = [
     {
       container_port = 80
-      name = "http"
+      name           = "http"
     },
     {
       container_port = 443
-      name = "https"
+      name           = "https"
     },
   ]
-  volumes = [
+  volume_host_path = [
     {
-      path = "no"
-      name = "http"
+      volume_name  = cert-volume
+      path_on_node = "/kube_host/letsencrypt"
     },
     {
-      path = "yes"
-      name = "https"
+      volume_name  = acme-volume
+      path_on_node = "/kube_host/challenge"
+    }
+  ]
+  volume_mount = [
+    {
+      mount_path  = "/etc/letsencrypt"
+      volume_name = "cert-volume"
+    },
+    {
+      mount_path  = "/var/www.challenge/.well-known/acme-challenge"
+      volume_name = "acme-volume"
     },
   ]
+  # volumes:
+  #   - name: cert-volume
+  #     hostPath:
+  #       path: /kube_host/letsencrypt
+  #   - name: acme-volume
+  #     hostPath:
+  #       path: /kube_host/challenge
 }
-      # volumes:
-      #   - name: cert-volume
-      #     hostPath:
-      #       path: /kube_host/letsencrypt
-      #   - name: acme-volume
-      #     hostPath:
-      #       path: /kube_host/challenge
