@@ -4,16 +4,6 @@ module "flask_deployment" {
   image_tag       = "dev"
   deployment_name = "flask"
   container_port  = 80
-  volume_mounts = [
-    {
-      mount_path = "/etc/letsencrypt"
-      name       = "cert-volume"
-    },
-    {
-      mount_path = "/var/www/challenge/.well-known/acme-challenge"
-      name       = "acme-volume"
-    }
-  ]
   ports = [
     {
       container_port = 80
