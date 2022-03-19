@@ -34,12 +34,17 @@ resource "kubernetes_deployment" "k8s_deployment" {
           #   }
           dynamic "volume_mount" {
             for_each = length(var.volume_mounts) > 0 ? [1] : [0]
-            content {
-                items = jsonencode(var.volume_mounts)
+
+            dynamic "content"{
+                for_each = var.volume_mounts
+                content {
+                    mount_path = value.mount_path
+                    name = value.name
+                }
                 # mount_path = jsonencode([for i in var.volume_mounts : i.mount_path])
                 # name = jsonencode([for i in var.volume_mounts : i.name])
-          }
-          }
+            }
+            }
         }
       }
     }
