@@ -22,14 +22,14 @@ resource "kubernetes_deployment" "k8s_deployment" {
         container {
           image = "${var.image_name}:${var.image_tag}"
           name  = "${var.deployment_name}"
-          port {
-            container_port = "${var.container_port}"
-          }
+        #   port {
+        #     container_port = "${var.container_port}"
+        #   }
           dynamic "port" {
             for_each = var.ports
             content {
-              container_port = port.container_port
-              name           = port.name
+              container_port = port.value.container_port
+              name           = port.value.name
             }
           }
           dynamic "volume_mount" {
