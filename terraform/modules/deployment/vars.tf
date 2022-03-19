@@ -26,18 +26,14 @@ variable "volume_mounts" {
   description = "The volume mounts to use"
 }
 variable "ports" {
-  type = list(object({
-    container_port = number,
-    name = string
-  }))
+  type = list(map(
+  ))
   default = null
   description = "The volume mounts to use"
 }
 variable "volumes" {
-  type = list(object({
-    path = string,
-    name = string
-  }))
+  type = list(map(
+  ))
   default = null
   description = "The volume mounts to use"
 }
