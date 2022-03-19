@@ -24,4 +24,21 @@ module "flask_deployment" {
       name = "https"
     },
   ]
+  volumes = [
+    {
+      path = "no"
+      name = "http"
+    },
+    {
+      path = "yes"
+      name = "https"
+    },
+  ]
 }
+      # volumes:
+      #   - name: cert-volume
+      #     hostPath:
+      #       path: /kube_host/letsencrypt
+      #   - name: acme-volume
+      #     hostPath:
+      #       path: /kube_host/challenge

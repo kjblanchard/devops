@@ -41,6 +41,14 @@ resource "kubernetes_deployment" "k8s_deployment" {
                 }
             }
         }
+
+        volumes{
+            for_each = var.volumes
+            name = value.name
+            host_path = {
+                path = value.path
+            }
+        }
         #   dynamic "volume_mount" {
         #     for_each = length(var.volume_mounts) > 0 ? [1] : [0]
 
