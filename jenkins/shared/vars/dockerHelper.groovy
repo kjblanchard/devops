@@ -9,6 +9,7 @@ def call(Map config = [:], ArrayList stage_list ) {
             def changed_files = config.changed_git_files
             buildable_projects_map.each({key, value ->
                 if(changed_files.contains("images/${key}")) {
+                    currentBuild.displayName = "${currentBuild.displayName}-${key}"
                     docker_image_builder(stage_list, "sg_${value}",value)
                     docker_image_pusher(stage_list, "sg_${value}")
                 }

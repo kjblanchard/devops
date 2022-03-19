@@ -1,7 +1,7 @@
 module "flask_deployment" {
   source          = "../../modules/deployment"
   image_name      = "enf3rno/sg_flask"
-  image_tag       = "139"
+  image_tag       = "142"
   deployment_name = "flask-wedding"
   ports = [
     {
