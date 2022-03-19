@@ -73,33 +73,33 @@
 #         - name: acme-volume
 #           hostPath:
 #             path: /kube_host/challenge
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: runner
-  labels:
-    app: runner
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: runner
-  template:
-    metadata:
-      labels:
-        app: runner
-    spec:
-      containers:
-        - name: runner
-          image: enf3rno/sg_runner:1
-          resources:
-            requests:
-              memory: "512Mi"
-              cpu: "250m"
-            limits:
-              memory: "1Gi"
-              cpu: "1"
-          ports:
-            - containerPort: 80
----
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: runner
+#   labels:
+#     app: runner
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: runner
+#   template:
+#     metadata:
+#       labels:
+#         app: runner
+#     spec:
+#       containers:
+#         - name: runner
+#           image: enf3rno/sg_runner:1
+#           resources:
+#             requests:
+#               memory: "512Mi"
+#               cpu: "250m"
+#             limits:
+#               memory: "1Gi"
+#               cpu: "1"
+#           ports:
+#             - containerPort: 80
+# ---
