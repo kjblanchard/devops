@@ -44,9 +44,9 @@ resource "kubernetes_deployment" "k8s_deployment" {
 
         volume{
             for_each = var.volumes
-            name = each.name
+            name = each.value.name
             host_path = {
-                path = each.path
+                path = each.value.path
             }
         }
         #   dynamic "volume_mount" {
