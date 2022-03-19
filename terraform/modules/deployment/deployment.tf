@@ -42,7 +42,7 @@ resource "kubernetes_deployment" "k8s_deployment" {
             }
         }
 
-        volumes{
+        volume{
             for_each = var.volumes
             name = value.name
             host_path = {
