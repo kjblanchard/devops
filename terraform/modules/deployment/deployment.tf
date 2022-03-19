@@ -26,7 +26,7 @@ resource "kubernetes_deployment" "k8s_deployment" {
             container_port = "${var.container_port}"
           }
           volume_mount{
-              dynamic {
+              dynamic "" {
                   for_each = var.volume_mounts
                   iterator = mount
                   content{
