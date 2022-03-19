@@ -1,32 +1,33 @@
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: flask-deployment
-#   labels:
-#     app: flask-deployment
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: flask-webapp
-#   template:
-#     metadata:
-#       labels:
-#         app: flask-webapp
-#     spec:
-#       containers:
-#         - name: flask-webapp
-#           image: enf3rno/sg_flask:dev
-#           imagePullPolicy: Always
-#           resources:
-#             requests:
-#               memory: "512Mi"
-#               cpu: "250m"
-#             limits:
-#               memory: "1Gi"
-#               cpu: "1"
-#           ports:
-#             - containerPort: 80
+# This is not used anymore, moved to terraform to deploy.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-deployment
+  labels:
+    app: flask-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-webapp
+  template:
+    metadata:
+      labels:
+        app: flask-webapp
+    spec:
+      containers:
+        - name: flask-webapp
+          image: enf3rno/sg_flask:dev
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
+          ports:
+            - containerPort: 80
 ---
 apiVersion: apps/v1
 kind: Deployment

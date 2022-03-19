@@ -34,11 +34,4 @@ module "flask_deployment" {
       volume_name = "acme-volume"
     },
   ]
-  # volumes:
-  #   - name: cert-volume
-  #     hostPath:
-  #       path: /kube_host/letsencrypt
-  #   - name: acme-volume
-  #     hostPath:
-  #       path: /kube_host/challenge
 }

@@ -29,7 +29,3 @@ variable "ports" {
   description = "(Optional) Mount path from pods to volume"
   default     = []
 }
-    # re_addresses = replace(jsonencode({for i in range(local.az_num) :
-    #   local.az_names[i] => {
-    #     "egress-ipv4"  = local.re_eg_eip[i].public_ip,
-    #     "ingress-ipv4" = local.re_ing_eip[i].public_ip
