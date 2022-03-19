@@ -25,14 +25,19 @@ resource "kubernetes_deployment" "k8s_deployment" {
           port {
             container_port = "${var.container_port}"
           }
+        #   dynamic "volume_mount"{
+        #       for_each = var.volume_mounts
+        #       content {
+        #           mount_path = volume_mount.value.mount_path
+        #           name = volume_mount.value.mount_path
+        #       }
+        #   }
           dynamic "volume_mount"{
-              for_each = var.volume_mounts
+              for_each = length(var.volume_mounts) > 0 ? [1] : [0]
               content {
-                # for i in var.volume_mounts :
-                #   mount_path = i.mount_path
-                #   name = i.name
-                  mount_path = volume_mount.value.mount_path
-                  name = volume_mount.value.mount_path
+                for i in var.volume_mounts :
+                  mount_path = i.mount_path
+                  name = i.name
               }
           }
         }
