@@ -1,5 +1,5 @@
 module "flask_deployment" {
-  source          = "../modules/deployment"
+  source          = "../../modules/deployment"
   image_name      = "enf3rno/sg_nginx"
   image_tag       = "latest"
   deployment_name = "nginx-wedding"
