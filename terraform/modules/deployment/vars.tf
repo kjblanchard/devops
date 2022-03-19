@@ -25,3 +25,15 @@ variable "volume_mounts" {
   default = null
   description = "The volume mounts to use"
 }
+variable "ports" {
+  type = list(object({
+    container_port = number,
+    name = string
+  }))
+  default = null
+  description = "The volume mounts to use"
+}
+    # re_addresses = replace(jsonencode({for i in range(local.az_num) :
+    #   local.az_names[i] => {
+    #     "egress-ipv4"  = local.re_eg_eip[i].public_ip,
+    #     "ingress-ipv4" = local.re_ing_eip[i].public_ip

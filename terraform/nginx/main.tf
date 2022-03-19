@@ -14,4 +14,14 @@ module "flask_deployment" {
       name = "acme-volume"
     }
   ]
+  ports = [
+    {
+      container_port = 80
+      name = "http"
+    },
+    {
+      container_port = 443
+      name = "https"
+    },
+  ]
 }
