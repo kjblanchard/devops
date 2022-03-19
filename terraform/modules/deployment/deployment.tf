@@ -25,15 +25,32 @@ resource "kubernetes_deployment" "k8s_deployment" {
           port {
             container_port = "${var.container_port}"
           }
-          dynamic "volume_mount" {
-            for_each = length(var.volume_mounts) > 0 ? [1] : [0]
-
-            content = jsonencode({for s in var.volume_mount : s => upper(s)})
-                # mount_path = jsonencode([for i in var.volume_mounts : i.mount_path])
-                # name = jsonencode([for i in var.volume_mounts : i.name])
-
+          dynamic "port" {
+            for_each = var.ports
+            content {
+              container_port = port.container_port
+              name           = port.name
             }
-
+          }
+          dynamic "volume_mount" {
+            for_each = var.volume_mount
+            content {
+              mount_path = volume_mount.value.mount_path
+              sub_path   = lookup(volume_mount.value, "sub_path", null)
+              name       = volume_mount.value.volume_name
+              read_only  = lookup(volume_mount.value, "read_only", false)
+            }
+          }
+        }
+      }
+      dynamic "volume" {
+        for_each = var.volume_host_path
+        content {
+          host_path {
+            path = volume.value.path_on_node
+            type = lookup(volume.value, "type", null)
+          }
+          name = volume.value.volume_name
         }
       }
     }
