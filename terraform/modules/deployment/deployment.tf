@@ -1,6 +1,6 @@
 resource "kubernetes_deployment" "k8s_deployment" {
   metadata {
-    name      = "${var.deployment_name}-deployment"
+    name = "${var.deployment_name}-deployment"
     labels = {
       app = "${var.deployment_name}-deployment"
     }
@@ -25,22 +25,23 @@ resource "kubernetes_deployment" "k8s_deployment" {
           port {
             container_port = "${var.container_port}"
           }
-        #   dynamic "volume_mount"{
-        #       for_each = var.volume_mounts
-        #       content {
-        #           mount_path = volume_mount.value.mount_path
-        #           name = volume_mount.value.mount_path
-        #       }
-        #   }
-          dynamic "volume_mount"{
-              for_each = length(var.volume_mounts) > 0 ? [1] : [0]
-
-              resource = {for i in var.volume_mounts :
+          #   dynamic "volume_mount"{
+          #       for_each = var.volume_mounts
+          #       content {
+          #           mount_path = volume_mount.value.mount_path
+          #           name = volume_mount.value.mount_path
+          #       }
+          #   }
+          dynamic "volume_mount" {
+            for_each = length(var.volume_mounts) > 0 ? [1] : [0]
+            content {
+              info = { for i in var.volume_mounts :
                 content => {
-                    "mount_path" = i.mount_path,
-                    "name" = i.name
+                  "mount_path" = i.mount_path,
+                  "name"       = i.name
                 }
               }
+            }
 
           }
         }
