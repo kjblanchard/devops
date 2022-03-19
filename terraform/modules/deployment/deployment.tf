@@ -28,8 +28,11 @@ resource "kubernetes_deployment" "k8s_deployment" {
           dynamic "volume_mount"{
               for_each = var.volume_mounts
               content {
-                  mount_path = volume_mount.mount_path
-                  name = volume_mount.name
+                # for i in var.volume_mounts :
+                #   mount_path = i.mount_path
+                #   name = i.name
+                  mount_path = volume_mount.value.mount_path
+                  name = volume_mount.value.mount_path
               }
           }
         }
