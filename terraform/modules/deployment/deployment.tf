@@ -42,7 +42,6 @@ resource "kubernetes_deployment" "k8s_deployment" {
             }
           }
         }
-      }
       dynamic "volume" {
         for_each = var.volume_host_path
         content {
@@ -52,6 +51,7 @@ resource "kubernetes_deployment" "k8s_deployment" {
           }
           name = volume.value.volume_name
         }
+      }
       }
     }
   }
