@@ -25,7 +25,7 @@ def get_footer_text():
 @app.route('/api/v1/start')
 def hello():
     runner_response = requests.get('http://runner')
-    return runner_response
+    return runner_response.json()
 
 # Use this for debugging locally, exclude from the build
 # app.run(port=4050 )
