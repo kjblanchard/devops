@@ -40,8 +40,7 @@ resource "kubernetes_deployment" "k8s_deployment" {
                     "mount_path" = i.mount_path,
                     "name" = i.name
                 }
-
-
+              }
 
           }
         }
