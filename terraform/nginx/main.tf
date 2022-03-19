@@ -16,11 +16,11 @@ module "flask_deployment" {
   ]
   volume_host_path = [
     {
-      volume_name  = cert-volume
+      volume_name  = "cert-volume"
       path_on_node = "/kube_host/letsencrypt"
     },
     {
-      volume_name  = acme-volume
+      volume_name  = "acme-volume"
       path_on_node = "/kube_host/challenge"
     }
   ]
