@@ -12,10 +12,6 @@ variable "deployment_name" {
   type        = string
   description = "The deployment name for this deployment, used for naming things properly"
 }
-variable "container_port" {
-  type        = number
-  description = "The port that the container will have open"
-}
 
 variable "volume_mount" {
   description = "(Optional) Mount path from pods to volume"

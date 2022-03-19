@@ -3,7 +3,6 @@ module "flask_deployment" {
   image_name      = "enf3rno/sg_nginx"
   image_tag       = "latest"
   deployment_name = "nginx-wedding"
-  container_port  = 80
   ports = [
     {
       container_port = 80
