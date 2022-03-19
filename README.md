@@ -1,28 +1,27 @@
-The wedding website.
+# Wedding Website
 
-This is running on a Intel Nuc with Ubuntu Desktop installed as the OS.
-The containers are controlled by Kubernetes running in Minikube
+This is a website for our upcoming wedding.  It has a lot of elements to it, mostly for fun.
+https://wedding.supergoon.com
 
-NGINX - reverse proxy and handling SSL
-Jenkins - Handles auto rebuilding the Docker images on git changes and pushing to docker hub.
-Flask - python web app
+Host: Intel Nuc \
+OS - Ubuntu Desktop \
+Container Orchestration - Kubernetes (minikube) \
 
-Linux (debian) requirements (Ansible is used to configure):
-Minikube - for running all the containers
-Kubectl - To talk to the kubernetes api
-Helm - To handle jenkins deployment
+Containers \
+NGINX - Reverse Proxy / SSL \
+Flask - webapp \
+Jenkins - Rebuild images on commit
 
-Docker - Minikube runs on docker (not installed via ansible yet)
-
-Run:
-Start minikube (mount_minikube_volume.sh)
-Use iptables to port forward if you need to access it outside the cluster (script for that in k8s folder)
-Port forward from your router to the phsical host on 80 and 443 to the nodeports
-profit
+Tools \
+Ansible - Configure the Intel Nuc \
+Terraform - Deploy the kubernetes components \
+Helm - Jenkins deployment \
+Minikube - local k8s running as a docker container \
 
 Traffic Flow to Website:
 Internet --> Nucbuntu(Ubuntu Intel Nuc) --> Minikube(docker) --> NGINX(k8s pod) --> Flask(k8s pod, gunicorn)
 
-Manual Steps:
-Home router - port forward to nucbuntu, likely cannot be automated for me, as I'm using unifi.
-Nucbuntu - Iptables to Minikube pod - future use ansible playbook to remove old entries and add new ones.
+## Authors
+
+- [@kevin blanchard](https://www.github.com/kjblanchard)
+
