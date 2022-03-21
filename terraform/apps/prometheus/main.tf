@@ -14,6 +14,6 @@ resource "helm_release" "nginx_ingress" {
 
   chart      = "prometheus-community/kube-prometheus-stack"
    values = [
-    "${file("values.yaml")}"
+    "${file("values.yml")}"
   ]
 }
