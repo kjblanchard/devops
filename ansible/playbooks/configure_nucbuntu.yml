@@ -1,8 +1,6 @@
 ---
 #Inventory file is in /etc/ansible/hosts
 #run command ansible-playbook configure_nucbuntu.yml -u 'redacted' -K
-#need to add variables to only do this if which command fails
-#TODO need to add K9s (currently it is a pain to install)
 - name: Install all dependencies
   hosts: nucbuntu
   vars:
@@ -57,6 +55,10 @@
       apt:
         name: terraform
 # install terragrunt
+    - name: Check if terragrunt is installed
+      command: which terragrunt
+      register: terragrunt
+      ignore_errors: true
     - name: Download terragrunt
       become: true
       get_url:
@@ -64,7 +66,7 @@
         dest: /usr/local/bin/terragrunt
         mode: '0740'
         owner: "{{ username }}"
-        # install aws cli
+      when: terragrunt.rc != 0
 
 
 
@@ -103,6 +105,10 @@
       with_items:
         - kubectx
         - kubens
+    - name: Check if k9s is installed
+      command: which k9s
+      register: k9s
+      ignore_errors: true
     - name: Download k9s
       become: true
       get_url:
@@ -110,6 +116,7 @@
         dest: /tmp/k9s.tgz
         mode: '0740'
         owner: "{{ username }}"
+      when: k9s.rc !=0
     - name: Extract k9s to folder
       unarchive:
         src: /tmp/k9s.tgz
@@ -118,15 +125,7 @@
         owner: "{{ username }}"
         remote_src: True
       become: true
-
-    # - name: Register Aws Cli Installed
-    #   command: which aws
-    #   register: aws_installed
-    #   ignore_errors: true
-    # - name: Run the aws cli installer
-    #   ansible.builtin.shell: /tmp/aws/install
-    #   become: true
-    #   when: aws_installed.rc != 0
+      when: k9s.rc !=0
 
     # Ensure folders are created for the kubernetes bindmounts for cert storage
     - name: Create folder for lets encrypt
