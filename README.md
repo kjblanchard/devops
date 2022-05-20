@@ -21,6 +21,9 @@ Minikube - local k8s running as a docker container \
 Traffic Flow to Website:
 Internet --> Nucbuntu(Ubuntu Intel Nuc) --> Minikube(docker) --> NGINX(k8s pod) --> Flask(k8s pod, gunicorn)
 
+Currently jenkins is deployed via helm -
+helm install jenkins -n jenkins -f jenkins-values.yml jenkinsci/jenkins
+
 ## Authors
 
 - [@kevin blanchard](https://www.github.com/kjblanchard)
