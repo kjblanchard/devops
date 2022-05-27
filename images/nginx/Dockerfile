@@ -20,6 +20,7 @@ RUN mkdir -p $CERT_FOLDER
 ARG CRON_FOLDER=/etc/periodic/monthly/
 COPY ./update_cert_cron.sh $CRON_FOLDER/update_cert_cron.sh
 RUN chmod +x $CRON_FOLDER
+RUN chmod +x $CRON_FOLDER/update_cert_cron.sh
 
 #TODO update the DNS record in this daily cron as well, will need AWS creds and AWS CLI in a script
 
