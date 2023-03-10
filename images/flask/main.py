@@ -15,7 +15,7 @@ def get_days_until_wedding():
     time = datetime.now()
     wedding_day = datetime(year=2023, day=21, month=1)
     diff = wedding_day - time
-    return diff.days
+    return diff.days if diff.days > 0 else 'We are already married!'
 
 def get_footer_text():
     time = datetime.now()
