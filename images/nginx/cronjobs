@@ -1,0 +1,1 @@
+0 0 1 * * /etc/periodic/monthly/update_cert_cron.sh >> /test_file 2>&1
