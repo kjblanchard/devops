@@ -26,8 +26,7 @@ RUN chmod +x $CRON_FOLDER/update_cert_cron.sh
 COPY ./get_ssl_keys.sh start.sh
 RUN chmod +x start.sh
 
-# RUN ./start.sh ; exit 0
-ENTRYPOINT ["tail", "-f", "/dev/null"]
+RUN ./start.sh
 
 
 
