@@ -11,9 +11,11 @@ generate_cert(){
 configure_prod_server(){
     cp /etc/nginx/conf.d/default.conf.webserver /etc/nginx/conf.d/default.conf
 }
-if [ -e $CERT_FOLDER/fullchain.pem ]; then
+if [ -f "$CERT_FOLDER"/fullchain.pem ]; then
+    echo 'Cert is available, not generating cert'
     configure_prod_server
  else
+    echo 'Generating cert, then starting'
     generate_cert
     configure_prod_server
 fi
