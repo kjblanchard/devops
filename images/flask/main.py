@@ -7,15 +7,18 @@ app = Flask(__name__)
 @app.route("/")
 def homepage():
     return render_template('index.html',
-     days=get_days_until_wedding(),
+     days=get_days_until_wedding_text(),
      footer=get_footer_text()
      )
 
-def get_days_until_wedding():
+def get_days_until_wedding_text():
     time = datetime.now()
     wedding_day = datetime(year=2023, day=21, month=1)
     diff = wedding_day - time
-    return diff.days if diff.days > 0 else 'We are already married!'
+    if diff.days > 0:
+        return f"That is {diff.days} until our wedding!"
+    else:
+        return f"We got married {diff.days} ago!"
 
 def get_footer_text():
     time = datetime.now()
