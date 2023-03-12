@@ -18,7 +18,7 @@ def get_days_until_wedding_text():
     if diff.days > 0:
         return f"That is {diff.days} until our wedding!"
     else:
-        return f"We got married {diff.days} ago!"
+        return f"We got married {-diff.days} days ago!"
 
 def get_footer_text():
     time = datetime.now()
