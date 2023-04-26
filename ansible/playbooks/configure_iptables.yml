@@ -1,5 +1,5 @@
 # Add in the iptables entries if they need to be made.
-#Make this more dnamic (take in vars)
+# Make this more dnamic (take in vars)
 ---
 - name: Setup Port Forwarding Rules to make minikube work off local
   hosts: nucbuntu
@@ -18,24 +18,24 @@
         protocol: tcp
         jump: ACCEPT
         destination: "{{ minikube_ip_address }}"
-        destination_port: "{{ minikube_http_port}}"
-      become: yes
+        destination_port: "{{ minikube_http_port }}"
+      become: true
     - name: Accept Port 443 Inbound into IpTables
       ansible.builtin.iptables:
         chain: FORWARD
         protocol: tcp
         jump: ACCEPT
         destination: "{{ minikube_ip_address }}"
-        destination_port: "{{ minikube_ssl_port}}"
-      become: yes
+        destination_port: "{{ minikube_ssl_port }}"
+      become: true
     - name: Accept Jenkins service port
       ansible.builtin.iptables:
         chain: FORWARD
         protocol: tcp
         jump: ACCEPT
         destination: "{{ minikube_ip_address }}"
-        destination_port: "{{ minikube_jenkins_node_port}}"
-      become: yes
+        destination_port: "{{ minikube_jenkins_node_port }}"
+      become: true
     - name: Forward Incoming traffic from port 80 On Nucbuntu to minikube
       ansible.builtin.iptables:
         table: nat
@@ -45,7 +45,7 @@
         destination_port: 80
         jump: DNAT
         to_destination: "{{ minikube_ip_address }}:{{ minikube_http_port }}"
-      become: yes
+      become: true
     - name: Forward Incoming traffic from port 443 On Nucbuntu to minikube
       ansible.builtin.iptables:
         table: nat
@@ -55,7 +55,7 @@
         destination_port: 443
         jump: DNAT
         to_destination: "{{ minikube_ip_address }}:{{ minikube_ssl_port }}"
-      become: yes
+      become: true
     - name: Forward Incoming traffic from Jenkins Port to Minikube port
       ansible.builtin.iptables:
         table: nat
@@ -65,4 +65,12 @@
         destination_port: "{{ nuc_jenkins_listening_port }}"
         jump: DNAT
         to_destination: "{{ minikube_ip_address }}:{{ minikube_jenkins_node_port }}"
-      become: yes
+      become: true
+    - name: Check Minikube is running
+      ansible.builtin.command: minikube status -o=json
+      register: minikube_result_json
+      changed_when: false
+    - name: Start minikube
+      ansible.builtin.command: minikube start --driver=docker --mount /kube_host
+      when: (minikube_result_json.stdout | from_json).Host == "Stopped"
+      changed_when: (minikube_result_json.stdout | from_json).Host == "Stopped"
