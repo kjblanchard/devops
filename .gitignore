@@ -21,6 +21,8 @@ vendor
 .bundle
 .ruby-version
 .terraform.lock.hcl
+terraform.tfvars
 terragrunt
 provider.tf
 backend.tf
+*.zip
