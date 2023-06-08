@@ -18,10 +18,12 @@ RUN mkdir -p $CERT_FOLDER
 
 #Put our file into the daily cron to keep the cert updated and to run on a monthly basis, and add to crontabs.
 ARG CRON_FOLDER=/etc/periodic/monthly/
-COPY ./update_cert_cron.sh $CRON_FOLDER/update_cert_cron.sh
+COPY ./update_cert_cron.sh $CRON_FOLDER/update_cert_cron
 COPY cronjobs /etc/crontabs/root
 RUN chmod +x $CRON_FOLDER
 RUN chmod +x $CRON_FOLDER/update_cert_cron.sh
+# Add the logging file to troubleshoot certificate renewals
+RUN mkdir -p /var/log/wedding/test_file.txt
 
 COPY ./get_ssl_keys.sh start.sh
 RUN chmod +x start.sh
