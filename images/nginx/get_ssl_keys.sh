@@ -13,6 +13,7 @@ configure_prod_server(){
     cp /etc/nginx/conf.d/default.conf.webserver /etc/nginx/conf.d/default.conf
     nginx
 }
+crond -b -L /var/log/wedding/crond
 if [ -f "$CERT_FOLDER"/fullchain.pem ]; then
     echo 'Cert is available, not generating cert' >> /proc/1/fd/1
     configure_prod_server

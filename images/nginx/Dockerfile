@@ -22,8 +22,6 @@ COPY ./update_cert_cron.sh $CRON_FOLDER/update_cert_cron
 COPY cronjobs /etc/crontabs/root
 RUN chmod +x $CRON_FOLDER
 RUN chmod +x $CRON_FOLDER/update_cert_cron
-# Start crond on alpine
-RUN crond -b -L /var/log/wedding/crond
 # Add the logging file to troubleshoot certificate renewals
 RUN mkdir -p /var/log/wedding
 
