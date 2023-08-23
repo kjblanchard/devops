@@ -5,6 +5,7 @@ generate_cert(){
     cp /etc/nginx/conf.d/default.conf.certbot /etc/nginx/conf.d/default.conf
     nginx
     certbot --nginx -d wedding.supergoon.com -d www.wedding.supergoon.com --email enf3rno@yahoo.com --non-interactive --agree-tos
+    certbot --nginx -d sgdiscord.supergoon.com -d www.sgdiscord.supergoon.com --email enf3rno@yahoo.com --non-interactive --agree-tos
     nginx -s stop
 }
 
