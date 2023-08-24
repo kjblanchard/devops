@@ -1,1 +1,1 @@
-0 0 1 * * /etc/periodic/monthly/update_cert_cron >> /var/log/wedding/test_file.txt 2>&1
+0 0 1 * * /etc/periodic/monthly/update_cert_cron 2>&1 | tee -a /var/log/wedding/update_cert.log
