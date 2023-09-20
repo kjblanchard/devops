@@ -1,6 +1,6 @@
 ---
-#Inventory file is in /etc/ansible/hosts
-#run command ansible-playbook configure_nucbuntu.yml -u 'redacted' -K
+# Inventory file is in /etc/ansible/hosts
+# run command ansible-playbook configure_nucbuntu.yml -u 'redacted' -K
 - name: Install all dependencies
   hosts: nucbuntu
   vars:

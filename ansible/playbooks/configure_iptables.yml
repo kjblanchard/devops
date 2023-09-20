@@ -9,7 +9,8 @@
     minikube_ssl_port: 30008
     minikube_jenkins_node_port: 32000
     nuc_jenkins_listening_port: 8989
-    interface_name: wlp0s20f3
+    # interface_name: wlp0s20f3
+    interface_name: eno1
 
   tasks:
     - name: Accept Port 80 Inbound into IpTables
