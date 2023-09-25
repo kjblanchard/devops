@@ -1,0 +1,1 @@
+helm install --set username=$USERNAME ./mychart
