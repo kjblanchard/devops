@@ -2,7 +2,7 @@ module "flask_deployment" {
   source          = "../../modules/deployment"
   image_name      = "enf3rno/sg_nginx"
   #image_tag       = "2"
-  image_tag       = "25"
+  image_tag       = "27"
   deployment_name = "nginx-wedding"
   ports = [
     {
