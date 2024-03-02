@@ -38,7 +38,7 @@ resource "kubernetes_cron_job" "my_cron_job" {
           spec {
             container {
               name = "goon-ddns"
-              image = "enf3rno/sg_ddns:2"
+              image = "enf3rno/sg_ddns:6"
               env_from {
                 config_map_ref {
                   name = kubernetes_config_map.my_config.metadata[0].name

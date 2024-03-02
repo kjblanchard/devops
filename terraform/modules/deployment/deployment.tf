@@ -22,6 +22,7 @@ resource "kubernetes_deployment" "k8s_deployment" {
         container {
           image = "${var.image_name}:${var.image_tag}"
           name  = "${var.deployment_name}"
+          image_pull_policy = "Always"
         #   port {
         #     container_port = "${var.container_port}"
         #   }
