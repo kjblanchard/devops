@@ -6,21 +6,18 @@
   vars:
     username: kevin
   tasks:
-
     - name: Install apt Dependencies
       become: true
       apt:
         pkg:
-        - apt-transport-https
-        - ca-certificates
-        - curl
-        - git
-        - bash-completion
-        - gnupg
-        - software-properties-common
-        - awscli
-
-      # Install kubectl
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - git
+          - bash-completion
+          - gnupg
+          - software-properties-common
+          - awscli
     - name: Add Kubectl Repo Key
       become: true
       apt_key:
@@ -29,7 +26,7 @@
     - name: Add kubectl Apt Repo
       become: true
       apt_repository:
-        repo: 'deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main'
+        repo: "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
         filename: kubernetes
     - name: Install kubectl
       become: true
@@ -38,8 +35,7 @@
     - name: Enable kubectl bash autocompletion
       lineinfile:
         path: ~/.bashrc
-        line: 'source <(kubectl completion bash)'
-        # Install terraform
+        line: "source <(kubectl completion bash)"
     - name: Add terraform Repo Key
       become: true
       apt_key:
@@ -54,7 +50,6 @@
       become: true
       apt:
         name: terraform
-# install terragrunt
     - name: Check if terragrunt is installed
       command: which terragrunt
       register: terragrunt
@@ -64,18 +59,13 @@
       get_url:
         url: https://github.com/gruntwork-io/terragrunt/releases/download/v0.36.6/terragrunt_linux_amd64
         dest: /usr/local/bin/terragrunt
-        mode: '0740'
+        mode: "0740"
         owner: "{{ username }}"
       when: terragrunt.rc != 0
-
-
-
-
-  # Install helm
     - name: Add Helm Apt Repo
       become: true
       apt_repository:
-        repo: 'deb https://baltocdn.com/helm/stable/debian/ all main'
+        repo: "deb https://baltocdn.com/helm/stable/debian/ all main"
         filename: helm-stable-debian
     - name: Add Helm Repo Key - needed for helm installation
       become: true
@@ -89,14 +79,12 @@
       become: true
       apt:
         name: helm
-
-    # Install k8s tools
     - name: Clone kubens/kubectx git
       git:
-       repo: https://github.com/ahmetb/kubectx.git
-       dest: ~/git/kubectx
-       clone: yes
-       update: yes
+        repo: https://github.com/ahmetb/kubectx.git
+        dest: ~/git/kubectx
+        clone: yes
+        update: yes
     - name: Create symlinks for kubens and kubectx
       file:
         src: "/home/kevin/git/kubectx/{{ item }}"
@@ -114,34 +102,25 @@
       get_url:
         url: https://github.com/derailed/k9s/releases/download/v0.25.18/k9s_Linux_x86_64.tar.gz
         dest: /tmp/k9s.tgz
-        mode: '0740'
+        mode: "0740"
         owner: "{{ username }}"
       when: k9s.rc !=0
     - name: Extract k9s to folder
       unarchive:
         src: /tmp/k9s.tgz
         dest: /usr/local/bin
-        mode: '0740'
+        mode: "0740"
         owner: "{{ username }}"
         remote_src: True
       become: true
       when: k9s.rc !=0
-
     # Ensure folders are created for the kubernetes bindmounts for cert storage
-    - name: Create folder for lets encrypt
+    - name: Create folder for letsencrypt
       become: true
       file:
         path: "{{ item }}"
         state: directory
       with_items:
-       - '/kube_host/letsencrypt'
-       - '/kube_host/challenge'
-       - '/kube_host/jenkins-volume'
-    - name: Add prometheus repo
-      kubernetes.core.helm_repository:
-        name: prometheus-community
-        repo_url:  https://prometheus-community.github.io/helm-charts
-    - name: Add Jenkins repo
-      kubernetes.core.helm_repository:
-        name: jenkinsci
-        repo_url:  https://charts.jenkins.io
+        - "/kube_host/letsencrypt"
+        - "/kube_host/challenge"
+        - "/kube_host/jenkins-volume"

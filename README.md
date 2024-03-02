@@ -1,24 +1,47 @@
-# Wedding Website
+# Supergoon Devops
+## Handles Terraform and Ansible config for Supergoon Components and kubernetes host
 
-This is a website for our upcoming wedding.  It has a lot of elements to it, mostly for fun.
-https://wedding.supergoon.com
+### GoonDDNS
+This is a cronjob that automatically updates AWS route53 records for hosting from home with a dynamic IP
+- [Github](https://github.com/supergoongaming/sg_ddns)
 
-Host: Intel Nuc \
-OS - Ubuntu Desktop \
-Container Orchestration - Kubernetes (minikube) \
+### Supergoon Nginx
+Reverse proxy / ssl termination for all supergoon endpoints.  Also restarts nginx as needed for updating certs
+- [Github](https://github.com/supergoongaming/sg_nginx)
 
-Containers \
-NGINX - Reverse Proxy / SSL \
-Flask - webapp \
+### Supergoon Certbot
+Cronjob that updates letsencrypt certs every month to prevent expiration
+- [Github](https://github.com/supergoongaming/sg_certbot)
 
-Tools \
-Ansible - Configure the Intel Nuc \
-Terraform - Deploy the kubernetes components \
-Helm - ? \
-Minikube - local k8s running as a docker container \
+### Supergoon Website
+This is the portfolio page for supergoon.com
+- [Website](https://supergoon.com)
+- [Github](https://github.com/supergoongaming/sg_com)
 
-Traffic Flow to Website:
-Internet --> Nucbuntu(Ubuntu Intel Nuc) --> Minikube(docker) --> NGINX(k8s pod) --> Flask(k8s pod, gunicorn)
+### Wedding Website - wedding.supergoon.com
+
+This is a golang website for our wedding.  It has a lot of elements to it, mostly for fun.
+- [Website]( https://wedding.supergoon.com)
+- [Github](https://github.com/supergoongaming/sg_wedding)
+
+
+
+
+### Host info
+- Host: Intel Nuc
+- OS - Ubuntu Desktop
+- Container Orchestration - Kubernetes (minikube)
+
+
+## Setup
+### Tools
+- Ansible - Configure the Intel Nuc
+- Terraform - Deploy the kubernetes components
+- Helm - Will move off of terraform one day.
+- Minikube - local k8s running as a docker container
+
+### Traffic Flow to Website:
+- Internet --> Nucbuntu(Ubuntu Intel Nuc) --> Minikube(docker) --> NGINX(k8s pod) --> Apps
 
 ## Authors
 
