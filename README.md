@@ -1,5 +1,6 @@
 # Supergoon Devops
 ## Handles Terraform and Ansible config for Supergoon Components and kubernetes host
+- Most of the repos below build docker images on github actions.  Workflow is to update the repo, then update the terraform image version in this repo to update.
 
 ### GoonDDNS
 This is a cronjob that automatically updates AWS route53 records for hosting from home with a dynamic IP
