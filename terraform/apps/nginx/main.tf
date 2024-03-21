@@ -30,7 +30,7 @@ module "flask_deployment" {
       volume_name = "cert-volume"
     },
     {
-      mount_path  = "/var/www.challenge/.well-known/acme-challenge"
+      mount_path  = "/var/www/challenge/.well-known/acme-challenge"
       volume_name = "acme-volume"
     },
   ]

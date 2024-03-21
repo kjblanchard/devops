@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-wedding
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-wedding
+  template:
+    metadata:
+      labels:
+        app: nginx-wedding
+    spec:
+      containers:
+      - name: nginx-container
+        image: enf3rno/sg_nginx:27
+        ports:
+        - containerPort: 80
+          name: http
+        - containerPort: 443
+          name: https
+        volumeMounts:
+        - name: cert-volume
+          mountPath: /etc/letsencrypt
+        - name: acme-volume
+          mountPath: /var/www/challenge/.well-known/acme-challenge
+        command: ["/bin/sh"]
+        stdin: true
+        tty: true
+      volumes:
+      - name: cert-volume
+        hostPath:
+          path: /kube_host/letsencrypt
+      - name: acme-volume
+        hostPath:
+          path: /kube_host/challenge
