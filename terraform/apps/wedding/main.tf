@@ -11,15 +11,15 @@ module "flask_deployment" {
   ]
 }
 module "flask_service" {
-  source          = "../../modules/service"
-  service_name      = "flask-service"
-  service_selector       = "flask-wedding"
-  service_type = "ClusterIP"
+  source           = "../../modules/service"
+  service_name     = "flask-service"
+  service_selector = "flask-wedding"
+  service_type     = "ClusterIP"
   ports = [
     {
-      port = 80
-targetPort = 8080
-      name           = "http"
+      port       = 80
+      target_port = 8080
+      name       = "http"
     }
   ]
 }
