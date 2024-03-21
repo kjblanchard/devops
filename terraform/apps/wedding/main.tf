@@ -5,7 +5,7 @@ module "flask_deployment" {
   deployment_name = "flask-wedding"
   ports = [
     {
-      container_port = 80
+      container_port = 8080
       name           = "http"
     }
   ]
