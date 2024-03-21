@@ -1,3 +1,4 @@
+# This is deprecated.  Using startup iptables configs now.
 # Add in the iptables entries if they need to be made.
 # Make this more dnamic (take in vars)
 ---
