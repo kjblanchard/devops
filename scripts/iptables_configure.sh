@@ -20,3 +20,7 @@ iptables -A FORWARD -p tcp -d "$minikube_ip_address" --dport "$minikube_ssl_port
 # Forward incoming traffic to Minikube
 iptables -t nat -A PREROUTING -i "$interface_name" -p tcp --dport 80 -j DNAT --to-destination "$minikube_ip_address:$minikube_http_port"
 iptables -t nat -A PREROUTING -i "$interface_name" -p tcp --dport 443 -j DNAT --to-destination "$minikube_ip_address:$minikube_ssl_port"
+
+# Forward plex server from docker (not a minikube setup currently).. it is just htps over this port.
+iptables -A INPUT -p tcp --dport 32400 -j ACCEPT
+
