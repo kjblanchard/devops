@@ -1,7 +1,7 @@
 module "supergoon_deployment" {
   source          = "../../modules/deployment"
   image_name      = "enf3rno/sg_com_simple"
-  image_tag       = "12"
+  image_tag       = "13"
   deployment_name = "supergoon-com"
   ports = [
     {
