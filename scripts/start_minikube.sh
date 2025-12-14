@@ -6,6 +6,7 @@
 # This file is placed at /usr/local/bin on nucbuntu and ran at startup.
 # minikube start --driver=docker --mount /kube_host
 minikube start --mount-string="/kube_host:/kube_host" --mount
+minikube mount /mnt/spiderman/Shared/plex:/plex &
 
 # If there is issues with minikube certificate, delete and then start:
 # minikube delete

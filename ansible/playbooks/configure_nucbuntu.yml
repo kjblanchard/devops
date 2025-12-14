@@ -5,6 +5,12 @@
   hosts: nucbuntu
   vars:
     username: kevin
+    script_files:
+      - iptables_configure.sh
+      - start_minikube.sh
+    service_files: 
+      - setup-iptables
+      - start-minikube
   tasks:
     - name: Install apt Dependencies
       become: true
@@ -62,23 +68,6 @@
         mode: "0740"
         owner: "{{ username }}"
       when: terragrunt.rc != 0
-    - name: Add Helm Apt Repo
-      become: true
-      apt_repository:
-        repo: "deb https://baltocdn.com/helm/stable/debian/ all main"
-        filename: helm-stable-debian
-    - name: Add Helm Repo Key - needed for helm installation
-      become: true
-      apt_key:
-        url: https://baltocdn.com/helm/signing.asc
-    - name: Install Helm Dependencies
-      become: true
-      apt:
-        name: apt-transport-https
-    - name: Install Helm
-      become: true
-      apt:
-        name: helm
     - name: Clone kubens/kubectx git
       git:
         repo: https://github.com/ahmetb/kubectx.git
@@ -114,7 +103,7 @@
         remote_src: True
       become: true
       when: k9s.rc !=0
-    # Ensure folders are created for the kubernetes bindmounts for cert storage
+      # Ensure folders are created for the kubernetes bindmounts for cert storage
     - name: Create folder for letsencrypt
       become: true
       file:
@@ -123,4 +112,20 @@
       with_items:
         - "/kube_host/letsencrypt"
         - "/kube_host/challenge"
-        - "/kube_host/jenkins-volume"
+    - name: Copy script files
+      ansible.builtin.copy:
+        src: "../../scripts/{{item}}"
+        dest: "/usr/local/bin/{{item}}"
+        mode: '0755'
+      loop: "{{ script_files }}"
+    - name: Copy service files
+      ansible.builtin.copy:
+        src: "../../scripts/{{ item }}.service"
+        dest: "/etc/systemd/system/{{ item }}.service"
+        mode: '0644'
+      loop: "{{ service_files }}"
+    - name: Enable Services
+      ansible.builtin.service:
+       name: "{{ item }}"
+       enabled: yes
+      loop: "{{ service_files }}"

@@ -7,7 +7,6 @@ exec &> /tmp/iptables_configure.log
 minikube_ip_address="192.168.49.2"
 minikube_http_port="30007"
 minikube_ssl_port="30008"
-#interface_name="wlp0s20f3"
 interface_name="eno1"
 
 # Clear existing rules
