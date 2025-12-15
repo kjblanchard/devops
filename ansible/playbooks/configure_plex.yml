@@ -1,0 +1,110 @@
+---
+# Inventory file is in /etc/ansible/hosts
+# run command ansible-playbook {filename} -u {username} -K
+- name: Configure system
+  hosts: plex
+  become: true
+  become_method: su
+  vars_files:
+    - /users/kevin/.ansible_secrets.yml
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name:
+          - ca-certificates
+          - curl
+          - nfs-common
+        state: present
+
+    - name: Ensure /etc/apt/keyrings exists
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Ensure Plex config directory exists
+      file:
+        path: /etc/plex/config
+        state: directory
+        mode: '0755'
+
+    - name: Download Docker GPG key
+      get_url:
+        url: https://download.docker.com/linux/debian/gpg
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+      when: not ansible_check_mode
+
+    - name: Add Docker repository
+      copy:
+        dest: /etc/apt/sources.list.d/docker.sources
+        content: |
+          Types: deb
+          URIs: https://download.docker.com/linux/debian
+          Suites: {{ ansible_distribution_release }}
+          Components: stable
+          Signed-By: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+
+    - name: Update apt cache after adding Docker repo
+      apt:
+        update_cache: yes
+    - name: Install Docker
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-compose-plugin
+        state: present
+        update_cache: true
+
+    - name: Enable and start Docker
+      ansible.builtin.systemd:
+        name: docker
+        enabled: true
+        state: started
+    - name: Add user to docker group
+      ansible.builtin.user:
+        name: kevin
+        groups: docker
+        append: true
+
+    - name: Check if /mnt/plex is mounted
+      ansible.builtin.command: mountpoint -q /mnt/plex
+      register: plex_mount
+      ignore_errors: yes
+
+    - name: Ensure Plex mount directory exists
+      ansible.builtin.file:
+        path: /mnt/plex
+        state: directory
+        mode: '0755'
+      when: plex_mount.rc != 0
+
+    - name: Mount Plex NFS share
+      ansible.builtin.mount:
+        src: "10.0.10.186:/Plex"
+        path: "/mnt/plex"
+        fstype: "nfs"
+        opts: "defaults,_netdev,x-systemd.automount"
+        state: mounted
+
+    - name: Create app directory
+      ansible.builtin.file:
+        path: /opt/plex
+        state: directory
+
+    - name: Deploy Plex docker-compose file
+      template:
+        src: ../../docker/plex-docker-compose.yaml.j2
+        dest: /opt/plex/docker-compose.yml
+
+    - name: Run docker compose
+      ansible.builtin.command: docker compose up -d
+      args:
+        chdir: /opt/plex

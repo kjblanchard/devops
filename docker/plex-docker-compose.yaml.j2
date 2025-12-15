@@ -1,0 +1,18 @@
+#This will fail on a reboot of the host .. so probably move this to k8s eventually :) 
+services:
+  plex:
+    container_name: plex
+    image: plexinc/pms-docker:1.41.3.9292-bc7397402
+    deploy:
+      restart_policy:
+        condition: always
+        delay: 10s
+        window: 30s
+    environment:
+      TZ: America/New_York # Adjust timezone as needed
+      PLEX_CLAIM: "{{ plex_claim }}"
+    network_mode: host
+    volumes:
+      - /etc/plex/config:/config
+      - /mnt/plex/temp:/transcode
+      - /mnt/plex/media:/data
