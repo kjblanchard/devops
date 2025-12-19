@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ name }}
+  namespace: {{ namespace_name }}
+spec:
+  schedule: "0 0 * * 1"  # Schedule for the 1st day of each month
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: {{ name }}
+              image: "{{ image_name }}:{{ image_tag }}"
+              command:
+                - "certbot"
+                - "certonly"
+                - "--config"
+                - "/etc/letsencrypt/cli.ini"
+                - "-n"
+              stdin: true
+              tty: true
+              {% if volume_mounts is defined %}
+              volumeMounts:
+                {% for volume in volume_mounts %}
+                - mountPath: {{ volume.path }}
+                  name: {{ volume.name }}              
+                {% endfor %}
+              {% endif %}
+          {% if volumes is defined %}
+          volumes:
+            {% for volume in volumes %}
+              - hostPath:
+                  path:  {{ volume.path }}
+                name: {{ volume.name }}
+            {% endfor %}
+          {% endif %}
+          restartPolicy: OnFailure

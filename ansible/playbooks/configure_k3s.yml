@@ -98,7 +98,7 @@
       ansible.builtin.file:
         path: /mnt/certs
         state: directory
-        mode: '0755'
+        mode: '0777'
       when: certs_mount_check.rc != 0
 
     - name: Mount certs NFS share

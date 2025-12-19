@@ -33,7 +33,7 @@
     volume_mounts:
       - path: /etc/letsencrypt
         name: certs
-      - path: /var/www/challenge/.well-known/acme-challenge
+      - path: /var/www.challenge/.well-known/acme-challenge
         name: challenge
       
 

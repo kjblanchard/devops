@@ -1,0 +1,38 @@
+---
+# Inventory file is in /etc/ansible/hosts
+# run command ansible-playbook {filename} -u {username} -K
+- name: Configure NGINX certbot
+  hosts: localhost
+  vars_files:
+    - /users/kevin/.ansible_secrets.yml
+  vars:
+    name: certbot
+    image_name: certbot/certbot
+    image_tag: latest
+    namespace_name: nginx
+    volumes:
+      - path: /mnt/certs/letsencrypt
+        name: certs
+      - path: /mnt/certs/challenge
+        name: challenge
+    volume_mounts:
+      - path: /etc/letsencrypt
+        name: certs
+      - path: /var/www.challenge/.well-known/acme-challenge
+        name: challenge
+      
+
+  tasks:
+    - name: Render Deployment manifest
+      template:
+        src: ../../../templates/k8s/cron.yaml.j2
+        dest: /tmp/{{ name }}-cron.yaml
+        lstrip_blocks: true
+        trim_blocks: true
+
+    - name: Apply Kubernetes manifests
+      k8s:
+        state: present
+        src: "{{ item }}"
+      loop:
+        - /tmp/{{ name }}-cron.yaml
