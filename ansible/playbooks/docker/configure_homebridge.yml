@@ -1,0 +1,27 @@
+---
+# Inventory file is in /etc/ansible/hosts
+# Restore from backup afterwards works fine
+# run command ansible-playbook {filename} -u {username} -K
+- name: Configure Homebridge, must be ran after system config right now.
+  hosts: docker
+  become: true
+  become_method: su
+  vars_files:
+    - /users/kevin/.ansible_secrets.yml
+  tasks:
+
+    - name: Ensure homebridge config directory exists
+      ansible.builtin.file:
+        path: /opt/homebridge/config
+        state: directory
+        mode: '0755'
+
+    - name: Deploy  docker-compose file
+      template:
+        src: ../../../docker/homebridge-docker-compose.yaml.j2
+        dest: /opt/homebridge/docker-compose.yml
+
+    - name: Run docker compose
+      ansible.builtin.command: docker compose up -d
+      args:
+        chdir: /opt/homebridge

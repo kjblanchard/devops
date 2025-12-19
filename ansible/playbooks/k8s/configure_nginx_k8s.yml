@@ -1,0 +1,61 @@
+---
+# Inventory file is in /etc/ansible/hosts
+# run command ansible-playbook {filename} -u {username} -K
+- name: Configure NGINX reverse proxy
+  hosts: localhost
+  vars_files:
+    - /users/kevin/.ansible_secrets.yml
+  vars:
+    deployment_name: nginx
+    image_name: enf3rno/sg_nginx
+    image_tag: 31
+    namespace_name: nginx
+    ports:
+      - container_port: 80
+        hostPort: 80
+        name: http
+      - container_port: 443
+        hostPort: 443
+        name: https
+    service_name: nginx-service
+    service_selector: nginx
+    service_type: ClusterIP
+    service_ports:
+      - name: http
+        port: 80
+      - name: https
+        port: 443
+    volumes:
+      - path: /mnt/certs/letsencrypt
+        name: certs
+      - path: /mnt/certs/challenge
+        name: challenge
+    volume_mounts:
+      - path: /etc/letsencrypt
+        name: certs
+      - path: /var/www/challenge/.well-known/acme-challenge
+        name: challenge
+      
+
+  tasks:
+    - name: Render Deployment manifest
+      template:
+        src: ../../../templates/k8s/deployment.yaml.j2
+        dest: /tmp/{{ deployment_name }}-deployment.yaml
+        lstrip_blocks: true
+        trim_blocks: true
+
+    - name: Render Service manifest
+      template:
+        src: ../../../templates/k8s/service.yaml.j2
+        dest: /tmp/{{ service_name }}.yaml
+        lstrip_blocks: true
+        trim_blocks: true
+
+    - name: Apply Kubernetes manifests
+      k8s:
+        state: present
+        src: "{{ item }}"
+      loop:
+        - /tmp/{{ service_name }}.yaml
+        - /tmp/{{ deployment_name }}-deployment.yaml

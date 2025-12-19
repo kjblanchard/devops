@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ service_name }}
+  namespace: {{ namespace_name }}
+spec:
+  type: {{ service_type | default("ClusterIP") }}
+  selector:
+    app: {{ service_selector }}
+  ports:
+{% for port in service_ports %}
+    - name: {{ port.name }}
+      port: {{ port.port }}
+  {% if port.target_port is defined %}
+      targetPort: {{ port.target_port }}
+  {% endif %}
+  {% if port.nodePort is defined %}
+      nodePort: {{ port.nodePort }}
+  {% endif %}
+{% endfor %}

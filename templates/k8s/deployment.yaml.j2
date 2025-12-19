@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ deployment_name }}
+  namespace: {{ namespace_name }}
+spec:
+  replicas: {{ replicas | default(1) }}
+  selector:
+    matchLabels:
+      app: {{ deployment_name }}
+  template:
+    metadata:
+      labels:
+        app: {{ deployment_name }}
+    spec:
+      containers:
+        - name: {{ deployment_name }}
+          image: "{{ image_name }}:{{ image_tag }}"
+          ports:
+          {% for port in ports %}
+            - containerPort: {{ port.container_port }}
+            {% if port.hostPort is defined %}
+              hostPort: {{ port.hostPort }}
+            {% endif %}
+              name: {{ port.name }}
+          {% endfor %}
+          {% if env_config_maps is defined %}
+          envFrom:
+              {% for cm in env_config_maps %}
+            - configMapRef:
+                name: {{ cm }}
+              {% endfor %}
+            {% endif %}
+          {% if volume_mounts is defined %}
+          volumeMounts:
+            {% for volume in volume_mounts %}
+            - mountPath: {{ volume.path }}
+              name: {{ volume.name }}              
+            {% endfor %}
+          {% endif %}
+      {% if volumes is defined %}
+      volumes:
+        {% for volume in volumes %}
+          - hostPath:
+              path:  {{ volume.path }}
+            name: {{ volume.name }}
+        {% endfor %}
+      {% endif %}
+

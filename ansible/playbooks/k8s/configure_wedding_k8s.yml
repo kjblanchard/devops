@@ -1,0 +1,45 @@
+---
+# Inventory file is in /etc/ansible/hosts
+# run command ansible-playbook {filename} -u {username} -K
+- name: Configure wedding app
+  hosts: localhost
+  vars_files:
+    - /users/kevin/.ansible_secrets.yml
+  vars:
+    deployment_name: wedding
+    image_name: enf3rno/sg_wedding
+    image_tag: 2
+    namespace_name: nginx
+    ports:
+      - container_port: 8080
+        name: http
+    service_name: flask-service
+    service_selector: wedding
+    service_type: ClusterIP
+    service_ports:
+      - name: http
+        port: 80
+        target_port: 8080
+
+  tasks:
+    - name: Render Deployment manifest
+      template:
+        src: ../../../templates/k8s/deployment.yaml.j2
+        dest: /tmp/{{ deployment_name }}-deployment.yaml
+        lstrip_blocks: true
+        trim_blocks: true
+
+    - name: Render Service manifest
+      template:
+        src: ../../../templates/k8s/service.yaml.j2
+        dest: /tmp/{{ service_name }}.yaml
+        lstrip_blocks: true
+        trim_blocks: true
+
+    - name: Apply Kubernetes manifests
+      k8s:
+        state: present
+        src: "{{ item }}"
+      loop:
+        - /tmp/{{ service_name }}.yaml
+        - /tmp/{{ deployment_name }}-deployment.yaml

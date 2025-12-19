@@ -1,0 +1,72 @@
+---
+# Inventory file is in /etc/ansible/hosts
+# run command ansible-playbook {filename} -u {username} -K
+- name: Configure system
+  hosts: localhost
+  vars_files:
+    - /users/kevin/.ansible_secrets.yml
+    - /users/kevin/.discord_secrets.yml
+  vars:
+    deployment_name: discord-bot
+    image_name: enf3rno/supergoon-discord-bot
+    image_tag: "13"
+    namespace_name: nginx
+    env_config_maps:
+      - discord-bot-data
+    ports:
+      - container_port: 80
+        name: http
+    service_name: discord-bot-service
+    service_selector: discord-bot
+    service_type: ClusterIP
+    service_ports:
+      - name: http
+        port: 8090
+        target_port: 80
+    config_map_name: discord-bot-data
+    config_data:
+      DISCORD_BOT_TOKEN: "{{ DISCORD_BOT_TOKEN }}"
+      DISCORD_APP_ID: "{{ DISCORD_APP_ID }}"
+      DISCORD_SUPERGOON_GUILD_ID: "{{ DISCORD_SUPERGOON_GUILD_ID }}"
+      DISCORD_CLIENT_SECRET: "{{ DISCORD_CLIENT_SECRET }}"
+      GITHUB_ACCESS_TOKEN: "{{ GITHUB_ACCESS_TOKEN }}"
+      DISCORD_CLIENT_ID: "{{ DISCORD_CLIENT_ID }}"
+
+  tasks:
+    - name: Render Deployment manifest
+      template:
+        src: ../../../templates/k8s/deployment.yaml.j2
+        dest: /tmp/{{ deployment_name }}-deployment.yaml
+        lstrip_blocks: true
+        trim_blocks: true
+
+    - name: Render namespace manifest
+      template:
+        src: ../../../templates/k8s/namespace.yaml.j2
+        dest: /tmp/{{ namespace_name }}-namespace.yaml
+        lstrip_blocks: true
+        trim_blocks: true
+
+    - name: Render Service manifest
+      template:
+        src: ../../../templates/k8s/service.yaml.j2
+        dest: /tmp/{{ service_name }}.yaml
+        lstrip_blocks: true
+        trim_blocks: true
+
+    - name: Render ConfigMap manifest
+      template:
+        src: ../../../templates/k8s/configmap.yaml.j2
+        dest: /tmp/{{ config_map_name }}.yaml
+        lstrip_blocks: true
+        trim_blocks: true
+
+    - name: Apply Kubernetes manifests
+      k8s:
+        state: present
+        src: "{{ item }}"
+      loop:
+        - /tmp/{{ namespace_name }}-namespace.yaml
+        - /tmp/{{ config_map_name }}.yaml
+        - /tmp/{{ service_name }}.yaml
+        - /tmp/{{ deployment_name }}-deployment.yaml

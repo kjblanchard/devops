@@ -1,0 +1,111 @@
+---
+# Inventory file is in /etc/ansible/hosts
+# run command ansible-playbook {filename} -u {username} -K
+# This is tested on mongo7 and unifi 9.5 .. 2025
+# Proxmox needs either v3+ for mongo, but I used host cpu 1cpu/1gb debian 13
+- name: Configure system
+  hosts: k3s
+  become: true
+  become_method: su
+  vars_files:
+    - /users/kevin/.ansible_secrets.yml
+  tasks:
+    - name: Update apt cache
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name:
+          - ca-certificates
+          - apt-transport-https
+          - gnupg
+          - curl
+          - sudo
+          - nfs-common
+        state: present
+    - name: Add kevin to sudo group
+      user:
+        name: kevin
+        groups: sudo
+        append: true
+
+    - name: Ensure apt keyrings directory exists
+      file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Download Kubernetes apt signing key
+      get_url:
+        url: https://pkgs.k8s.io/core:/stable:/v1.34/deb/Release.key
+        dest: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+        mode: '0644'
+
+    - name: Add Kubernetes apt repository
+      apt_repository:
+        repo: >
+          deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg]
+          https://pkgs.k8s.io/core:/stable:/v1.34/deb/ /
+        filename: kubernetes
+        state: present
+
+    - name: Update apt cache
+      apt:
+        update_cache: true
+
+    - name: Install required packages
+      apt:
+        name:
+          - kubectl
+        state: present
+
+    - name: Install k3s
+      shell: curl -sfL https://get.k3s.io | sh - --disable traefik
+      args:
+        creates: /usr/local/bin/k3s
+
+    - name: Ensure kevin kubeconfig directory exists
+      file:
+        path: /home/kevin/.kube
+        state: directory
+        owner: kevin
+        group: kevin
+        mode: '0700'
+
+    - name: Copy k3s kubeconfig to kevin
+      copy:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: /home/kevin/.kube/config
+        owner: kevin
+        group: kevin
+        mode: '0600'
+        remote_src: true
+
+    - name: Fetch kubeconfig to local
+      fetch:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: ~/.kube/config
+        flat: true
+
+    - name: Check if /mnt/certs is mounted
+      ansible.builtin.command: mountpoint -q /mnt/certs
+      register: certs_mount_check
+      ignore_errors: yes
+
+    - name: Ensure Certs  mount directory exists for nginx
+      ansible.builtin.file:
+        path: /mnt/certs
+        state: directory
+        mode: '0755'
+      when: certs_mount_check.rc != 0
+
+    - name: Mount certs NFS share
+      ansible.builtin.mount:
+        src: "10.0.10.186:/certs"
+        path: "/mnt/certs"
+        fstype: "nfs"
+        opts: "defaults,_netdev,x-systemd.automount"
+        state: mounted
+      when: certs_mount_check.rc != 0

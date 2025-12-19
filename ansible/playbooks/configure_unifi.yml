@@ -1,0 +1,74 @@
+---
+# Inventory file is in /etc/ansible/hosts
+# run command ansible-playbook {filename} -u {username} -K
+# This is tested on mongo7 and unifi 9.5 .. 2025
+# Proxmox needs either v3+ for mongo, but I used host cpu 1cpu/1gb debian 13
+- name: Configure system
+  hosts: unifi
+  become: true
+  become_method: su
+  vars_files:
+    - /users/kevin/.ansible_secrets.yml
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install required packages
+      apt:
+        name:
+          - ca-certificates
+          - apt-transport-https
+          - gnupg
+        state: present
+
+    - name: Download unifi GPG key
+      get_url:
+        url: https://dl.ui.com/unifi/unifi-repo.gpg
+        dest: /etc/apt/trusted.gpg.d/unifi-repo.gpg
+        mode: '0644'
+      when: not ansible_check_mode
+
+    - name: Add MongoDB 7.0 APT repository (homelab mode)
+      ansible.builtin.apt_repository:
+        repo: "deb [trusted=yes arch=amd64] http://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main"
+        filename: mongodb-org-7.0
+        state: present
+        update_cache: yes
+
+    - name: Add Ubiquiti UniFi APT repository
+      ansible.builtin.apt_repository:
+        repo: "deb [arch=amd64,arm64] https://www.ui.com/downloads/unifi/debian stable ubiquiti"
+        filename: "100-ubnt-unifi"
+        state: present
+
+    - name: Update apt cache after adding Unifi repo
+      apt:
+        update_cache: yes
+
+    - name: Install Mongo
+      ansible.builtin.apt:
+        name:
+          - mongodb-org
+        state: present
+        update_cache: true
+
+    - name: Enable and start Mongo (not started and unifi needs to connect during install)
+      ansible.builtin.systemd:
+        name: mongod
+        enabled: true
+        state: started
+
+    - name: Install Unifi
+      ansible.builtin.apt:
+        name:
+          - unifi
+        state: present
+        update_cache: true
+
+    - name: Enable unifi
+      ansible.builtin.systemd:
+        name: unifi
+        enabled: true
+        state: started
+

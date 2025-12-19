@@ -2,7 +2,7 @@
 # Inventory file is in /etc/ansible/hosts
 # run command ansible-playbook {filename} -u {username} -K
 - name: Configure system
-  hosts: plex
+  hosts: docker
   become: true
   become_method: su
   vars_files:
@@ -101,7 +101,7 @@
 
     - name: Deploy Plex docker-compose file
       template:
-        src: ../../docker/plex-docker-compose.yaml.j2
+        src: ../../../docker/plex-docker-compose.yaml.j2
         dest: /opt/plex/docker-compose.yml
 
     - name: Run docker compose
