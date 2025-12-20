@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ deployment_name }}
-  namespace: {{ namespace_name }}
+  namespace: {{ namespace_name | default("default") }}
 spec:
   replicas: {{ replicas | default(1) }}
   selector:
@@ -16,6 +16,9 @@ spec:
       containers:
         - name: {{ deployment_name }}
           image: "{{ image_name }}:{{ image_tag }}"
+          {% if host_network is defined %}
+          hostNetwork: true
+          {% endif %}
           ports:
           {% for port in ports %}
             - containerPort: {{ port.container_port }}
@@ -24,6 +27,13 @@ spec:
             {% endif %}
               name: {{ port.name }}
           {% endfor %}
+          {% if env_map is defined %}
+          env:
+              {% for e in env_map %}
+              - name: {{ e.name }}
+                value: "{{ e.value }}"
+              {% endfor %}
+            {% endif %}
           {% if env_config_maps is defined %}
           envFrom:
               {% for cm in env_config_maps %}

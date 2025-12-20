@@ -1,40 +1,34 @@
 ---
 # Inventory file is in /etc/ansible/hosts
 # run command ansible-playbook {filename} -u {username} -K
-- name: Configure NGINX reverse proxy
+- name: Configure VaultWarden 
   hosts: localhost
   vars_files:
     - /users/kevin/.ansible_secrets.yml
   vars:
-    deployment_name: nginx
-    image_name: enf3rno/sg_nginx
-    image_tag: 35
+    deployment_name: vaultwarden
+    image_name: vaultwarden/server
+    image_tag: 1.34.3-alpine
     namespace_name: nginx
+    env_map:
+      - name: DOMAIN 
+        value: "https://vw.supergoon.com"
     ports:
       - container_port: 80
-        hostPort: 80
         name: http
-      - container_port: 443
-        hostPort: 443
-        name: https
-    service_name: nginx-service
-    service_selector: nginx
+    service_name: vaultwarden-service
+    service_selector: vaultwarden
     service_type: ClusterIP
     service_ports:
       - name: http
         port: 80
-      - name: https
-        port: 443
+        target_port: 80
     volumes:
-      - path: /mnt/certs/letsencrypt
-        name: certs
-      - path: /mnt/certs/challenge
-        name: challenge
+      - path: /mnt/vault
+        name: vault
     volume_mounts:
-      - path: /etc/letsencrypt
-        name: certs
-      - path: /var/www.challenge/.well-known/acme-challenge
-        name: challenge
+      - path: /data
+        name: vault
       
 
   tasks:

@@ -18,7 +18,7 @@
 
     - name: Deploy  docker-compose file
       template:
-        src: ../../../docker/homebridge-docker-compose.yaml.j2
+        src: ../../../templates/docker/homebridge-docker-compose.yaml.j2
         dest: /opt/homebridge/docker-compose.yml
 
     - name: Run docker compose

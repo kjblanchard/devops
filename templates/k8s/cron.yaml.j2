@@ -18,6 +18,7 @@ spec:
                 - "--config"
                 - "/etc/letsencrypt/cli.ini"
                 - "-n"
+                - "--force-renewal"
               stdin: true
               tty: true
               {% if volume_mounts is defined %}

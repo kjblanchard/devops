@@ -42,6 +42,12 @@ This handles updating the discord server when releases happen, and slash cmds.
 
 - [Github](https://github.com/kjblanchard/sggDiscordBot)
 
+### Other things
+
+- Vaultwarden
+- Homebridge
+- Plex
+
 ### Host info
 
 - Host: Intel Nuc

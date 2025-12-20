@@ -1,0 +1,70 @@
+---
+# Inventory file is in /etc/ansible/hosts
+# run command ansible-playbook {filename} -u {username} -K
+- name: Configure Homebridge 
+  hosts: localhost
+  vars_files:
+    - /users/kevin/.ansible_secrets.yml
+  vars:
+    deployment_name: homebridge
+    host_network: true
+    image_name: homebridge/homebridge
+    image_tag: latest
+    env_map:
+      - name: ENABLE_AVAHI 
+        value: "1"
+    ports:
+      - container_port: 8581
+        name: hb
+      - container_port: 51221
+        name: hb2
+      - container_port: 51221
+        name: hb3
+      - container_port: 8582
+        name: hb4
+    service_name: homebridge-service
+    service_selector: homebridge
+    service_type: ClusterIP
+    service_ports:
+      - name: hb
+        port: 8581
+        target_port: 8581
+    volumes:
+      - path: /opt/homebridge/config
+        name: hb
+    volume_mounts:
+      - path: /homebridge
+        name: hb
+      
+
+  tasks:
+    # - name: Render namespace manifest
+    #   template:
+    #     src: ../../../templates/k8s/namespace.yaml.j2
+    #     dest: /tmp/{{ namespace_name }}.yaml
+    #     lstrip_blocks: true
+    #     trim_blocks: true
+
+    - name: Render Deployment manifest
+      template:
+        src: ../../../templates/k8s/deployment.yaml.j2
+        dest: /tmp/{{ deployment_name }}-deployment.yaml
+        lstrip_blocks: true
+        trim_blocks: true
+
+    # - name: Render Service manifest
+    #   template:
+    #     src: ../../../templates/k8s/service.yaml.j2
+    #     dest: /tmp/{{ service_name }}.yaml
+    #     lstrip_blocks: true
+    #     trim_blocks: true
+
+
+    - name: Apply Kubernetes manifests
+      k8s:
+        state: present
+        src: "{{ item }}"
+      loop:
+        # - /tmp/{{ namespace_name }}.yaml
+        # - /tmp/{{ service_name }}.yaml
+        - /tmp/{{ deployment_name }}-deployment.yaml
